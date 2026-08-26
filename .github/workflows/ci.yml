@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  agent-test:
+    name: agent-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: image/agent/go.mod
+          cache-dependency-path: image/agent/go.sum
+      - name: go vet
+        working-directory: image/agent
+        run: go vet ./...
+      - name: go test
+        working-directory: image/agent
+        run: go test ./...
+
+  web-build:
+    name: web-build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: npm ci
+        working-directory: web
+        run: npm ci --no-audit --no-fund
+      - name: build
+        working-directory: web
+        run: npm run build
