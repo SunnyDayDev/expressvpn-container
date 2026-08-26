@@ -1,0 +1,4 @@
+Logging in with token
+Unable to log in.
+Request failed, error: 1
+rc=127

@@ -1,0 +1,10 @@
+.git
+.env
+design/
+docs/
+openspec/
+web/node_modules/
+web/dist/
+image/agent/internal/xvpn/testdata/
+secrets.env
+.local/

@@ -1,0 +1,4 @@
+Not logged in.
+
+Network Lock: enabled when connected
+Split Tunnel: disabled

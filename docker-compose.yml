@@ -1,0 +1,37 @@
+services:
+  detour:
+    build:
+      context: .
+      dockerfile: image/Dockerfile
+      args:
+        EXPRESSVPN_VERSION: "${EXPRESSVPN_VERSION:-14.2.0.13656}"
+        EXPRESSVPN_SHA256: "${EXPRESSVPN_SHA256:-9d770edc6548a17994fd15714c5030a8f5767671b76b2117a884f7d48d93f2cb}"
+        SINGBOX_VERSION: "${SINGBOX_VERSION:-1.13.19}"
+        AGENT_VERSION: "${AGENT_VERSION:-0.1.0}"
+    image: detour/expressvpn-sidecar:${EXPRESSVPN_VERSION:-14.2.0.13656}-${AGENT_VERSION:-0.1.0}
+    container_name: detour-expressvpn
+    cap_add:
+      - NET_ADMIN
+      # демон ExpressVPN авторизует IPC-клиентов чтением /proc/<pid>/exe — без
+      # SYS_PTRACE все команды expressvpnctl таймаутятся (см. docs/spikes/S1.md)
+      - SYS_PTRACE
+    devices:
+      - /dev/net/tun
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: 1
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:${SOCKS_PORT:-1080}:1080"
+      # UDP ASSOCIATE: relay работает на том же порту, что и TCP
+      - "${BIND_ADDR:-127.0.0.1}:${SOCKS_PORT:-1080}:1080/udp"
+      - "${BIND_ADDR:-127.0.0.1}:${HTTP_PORT:-48100}:8080"
+    environment:
+      # Публикация с точки зрения хоста — агент показывает это в UI (read-only)
+      DETOUR_PUBLISHED_SOCKS_PORT: "${SOCKS_PORT:-1080}"
+      DETOUR_PUBLISHED_HTTP_PORT: "${HTTP_PORT:-48100}"
+      DETOUR_PUBLISHED_BIND_ADDR: "${BIND_ADDR:-127.0.0.1}"
+    volumes:
+      - detour-data:/data
+    restart: unless-stopped
+
+volumes:
+  detour-data: {}

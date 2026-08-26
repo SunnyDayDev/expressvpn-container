@@ -1,0 +1,7 @@
+.env
+.local/
+web/node_modules/
+web/dist/
+.DS_Store
+.build-cache/*
+!.build-cache/.gitkeep

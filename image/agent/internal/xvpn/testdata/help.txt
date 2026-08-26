@@ -1,0 +1,187 @@
+Usage: expressvpnctl [options] command [parameters...]
+Command-line interface to the ExpressVPN client.  Some commands, such as connect, require that the graphical client is also running.
+
+Options:
+  --timeout, -t <seconds>  Sets timeout for one-shot commands.
+  --debug, -d              Prints debug logs to stderr.
+  --help, -h               Displays this help.
+  -v, --version            Displays version information.
+
+Arguments:
+  command                  Command to execute
+  parameters               Parameters for the command
+
+Commands:
+  background
+    usage: background <enable|disable>
+    Allow the Network Lock (kill switch) and/or VPN connection to remain active in the background when the GUI client is not running.
+    When enabled, the ExpressVPN daemon will stay active even if the GUI client is closed or has not been started.
+    This allows `expressvpnctl connect` to be used even if the GUI client is not running.
+    Disabling background activation will disconnect the VPN and deactivate Split Tunnel if the GUI client is not running.
+    This needs to be enabled for autoconnect on system startup to work.
+    
+  connect
+    usage: connect [region]
+    Connects to the VPN, or reconnects to apply new settings.
+    To use this command, the ExpressVPN GUI client must be running, or background mode must be enabled with `expressvpnctl background enable`
+    (By default, the ExpressVPN daemon is inactive when the GUI client is not running.)
+    You may optionally pass a region as a parameter. That region will then be set before connecting.
+    
+  dedicatedip
+    Usage: dedicatedip <status|unlock|ip>
+    Check status, unlock your Dedicated Ip Subscription or get the actual ip address (if unlocked)
+    
+  disconnect
+    Disconnects from the VPN.
+    
+  dumpdiagnostics
+    usage: dumpdiagnostics
+    Writes a diagnostics file and prints its path.
+    Debug logging must be enabled.
+    
+  get
+    usage: get <type>
+    Get information from the ExpressVPN daemon.
+    Available types:
+      - allowlan - Whether to allow LAN traffic
+      - autoconnect - Whether to connect on system startup. Requires background permissions to connect. Use this option together with killswitch to ensure the system will be protected from startup.
+      - blockAds - Whether advanced protection is blocking Ads
+      - blockAdult - Whether advanced protection is blocking Adult sites
+      - blockAll - Whether advanced protection is fully enabled
+      - blockMalicious - Whether advanced protection is blocking Malicious sites
+      - blockTrackers - Whether advanced protection is blocking Trackers
+      - connectionstate - VPN connection state
+        values: Disconnected, Connecting, Connected, Interrupted, Reconnecting, DisconnectingToReconnect, Disconnecting
+      - debuglogging - State of debug logging setting
+      - dnsconfigured - Whether DNS configuration is complete
+      - networklock - Network Lock status
+      - protocol - VPN connection protocol
+        values: auto, lightwayudp, lightwaytcp, openvpnudp, openvpntcp, wireguard
+      - pubip - Your public IP address as provided by your ISP
+      - region - Currently selected region (or "smart")
+      - regions - List all available regions
+      - smart - The current smart region
+      - split-app - Split Tunnel rules
+      - splittunnel - Split Tunnel status
+      - vpnip - IP address assigned by the VPN server (Unknown when disconnected)
+    
+  install-chrome-extension
+    Open the browser to download and install the Chrome browser extension
+    
+  install-firefox-extension
+    Open the browser to download and install the Firefox browser extension
+    
+  login
+    usage: login <login_file>
+    Log in to your ExpressVPN account.
+    Put your activation code or your username and password on separate lines in a text file,
+    and specify that file on the command line:
+        (your activation code)
+    or
+        (youremail)
+        (yourpassword)
+    
+  logout
+    Log out your ExpressVPN account on this computer.
+    
+  mcp
+    usage: mcp [enable|disable]
+    Manage the MCP (Model Context Protocol) server.
+    With no arguments, shows the current MCP server status.
+      enable  - Start the MCP server
+      disable - Stop the MCP server
+    
+  monitor
+    usage: monitor <type>
+    Monitors the  ExpressVPN  daemon for changes in a specific setting or state value.
+    When a connection is established, the current value is printed.
+    When a change is received, the new value is printed.
+    Available types:
+      - allowlan - Whether to allow LAN traffic
+      - autoconnect - Whether to connect on system startup. Requires background permissions to connect. Use this option together with killswitch to ensure the system will be protected from startup.
+      - blockAds - Whether advanced protection is blocking Ads
+      - blockAdult - Whether advanced protection is blocking Adult sites
+      - blockAll - Whether advanced protection is fully enabled
+      - blockMalicious - Whether advanced protection is blocking Malicious sites
+      - blockTrackers - Whether advanced protection is blocking Trackers
+      - connectionstate - VPN connection state
+        values: Disconnected, Connecting, Connected, Interrupted, Reconnecting, DisconnectingToReconnect, Disconnecting
+      - debuglogging - State of debug logging setting
+      - dnsconfigured - Whether DNS configuration is complete
+      - networklock - Network Lock status
+      - protocol - VPN connection protocol
+        values: auto, lightwayudp, lightwaytcp, openvpnudp, openvpntcp, wireguard
+      - pubip - Your public IP address as provided by your ISP
+      - region - Currently selected region (or "smart")
+      - smart - The current smart region
+      - split-app - Split Tunnel rules
+      - splittunnel - Split Tunnel status
+      - vpnip - IP address assigned by the VPN server (Unknown when disconnected)
+    
+  resetsettings
+    Resets daemon settings to the defaults (advanced protection/ports/protocols/etc.)
+    Client settings won't be affected by this command.
+    
+  set
+    usage: set <type> <value>
+    Change settings in the  ExpressVPN  daemon.
+    Available types:
+      - allowlan - Whether to allow LAN traffic
+      - autoconnect - Whether to connect on system startup
+      - blockAds - Whether to block ads
+      - blockAdult - Whether to block adult content
+      - blockAll - Whether to enable all advanced blockers. This will change all block settings at once.
+      - blockMalicious - Whether to block malicious content
+      - blockTrackers - Whether to block trackers
+      - debuglogging - Enable or disable debug logging
+      - networklock - Whether to enable Network Lock
+      - protocol - Select a VPN protocol
+      - region - Select a region (or "smart")
+      - split-app - Edit Split Tunnel app rules. Choose to bypass, force through vpn or remove the rule. e.g.:
+      		set split-app bypass:/usr/lib/firefox/firefox
+      		set split-app vpn:/usr/lib/firefox/firefox
+      		set split-app remove:/usr/lib/firefox/firefox
+      - splittunnel - Whether to enable Split Tunnel
+    
+  speedtest
+    usage: speedtest [json] [automatic|manual] [location-id]
+    Run a speedtest on your current connection
+    Measures ping latency, jitter, packet loss, and HTTP download/upload bandwidth
+    Use 'json' as first argument for JSON output format
+    
+  status
+    Show status summary
+    
+  submitdiagnostics
+    usage: submitdiagnostics
+    Submits the most recent existing diagnostics file to CSI and prints the ticket code.
+    Use 'dumpdiagnostics' first to create a diagnostics file.
+    
+Examples:
+  To activate your ExpressVPN account:
+    expressvpnctl login myAccountTokenFile
+  
+  To connect to smart location:
+    expressvpnctl connect smart
+  
+  To set the default location:
+    expressvpnctl set region "germany-frankfurt-1"
+  
+  To connect to the default location:
+    expressvpnctl connect
+  
+  To connect to a specific location:
+    expressvpnctl connect "germany-frankfurt-1"
+  
+  To check current connection status:
+    expressvpnctl status
+  
+  To disable Network Lock:
+    expressvpnctl set networklock false
+  
+  To enable advanced protection features:
+    - 'expressvpnctl set blockAll true' to block ads, trackers, malicious and adult sites
+    - 'expressvpnctl set blockAds true' to block ads
+    - 'expressvpnctl set blockTrackers true' to block trackers
+    - 'expressvpnctl set blockMalicious true' to block malicious sites
+    - 'expressvpnctl set blockAdult true' to block adult sites

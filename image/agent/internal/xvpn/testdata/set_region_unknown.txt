@@ -1,0 +1,2 @@
+Unknown region: nonexistent-region-1
+rc=1

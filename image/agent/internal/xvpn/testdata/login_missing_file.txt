@@ -1,0 +1,2 @@
+Could not open file:  /tmp/nosuchfile.txt
+rc=1

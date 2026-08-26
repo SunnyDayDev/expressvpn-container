@@ -1,0 +1,5 @@
+Connected to Smart (usa-san-francisco)
+
+Protocol in use: OpenVpnTcp
+Network Lock: enabled when connected
+Split Tunnel: disabled
