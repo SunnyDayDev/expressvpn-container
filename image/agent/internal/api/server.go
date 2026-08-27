@@ -9,6 +9,7 @@ import (
 	"io/fs"
 	"log/slog"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -87,6 +88,8 @@ func New(addr string, deps Deps) *Server {
 	if deps.Sessions != nil {
 		mux.HandleFunc("GET /v1/auth/status", s.handleAuthStatus)
 		mux.HandleFunc("POST /v1/auth/setup", s.handleAuthSetup)
+		mux.HandleFunc("POST /v1/auth/skip", s.handleAuthSkip)
+		mux.Handle("POST /v1/auth/disable", authed(s.handleAuthDisable))
 		mux.HandleFunc("POST /v1/auth/login", s.handleAuthLogin)
 		mux.Handle("POST /v1/auth/logout", authed(s.handleAuthLogout))
 		mux.Handle("POST /v1/auth/logout-all", authed(s.handleAuthLogoutAll))
@@ -124,12 +127,41 @@ func (s *Server) Shutdown(ctx context.Context) error {
 
 func (s *Server) requireAuth(next http.HandlerFunc) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if s.deps.Sessions != nil && s.deps.Sessions.AuthDisabled() {
+			if crossSiteBlocked(r) {
+				writeJSON(w, http.StatusForbidden, map[string]string{"error": "cross_site_blocked"})
+				return
+			}
+			next(w, r)
+			return
+		}
 		if s.authorized(r) {
 			next(w, r)
 			return
 		}
 		writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "unauthorized"})
 	})
+}
+
+// crossSiteBlocked — щит для мутирующих запросов при выключенной защите:
+// без cookie+CSRF любой сайт в браузере пользователя может слать «слепые»
+// POST/PATCH на адрес агента (fetch no-cors). Браузерные запросы распознаются
+// по Sec-Fetch-Site/Origin; клиенты без этих заголовков (curl, скрипты)
+// проходят свободно.
+func crossSiteBlocked(r *http.Request) bool {
+	switch r.Method {
+	case http.MethodGet, http.MethodHead, http.MethodOptions:
+		return false
+	}
+	// Sec-Fetch-Site надёжнее Origin за reverse-proxy (Host мог быть переписан).
+	if site := r.Header.Get("Sec-Fetch-Site"); site != "" {
+		return site == "cross-site"
+	}
+	if origin := r.Header.Get("Origin"); origin != "" {
+		u, err := url.Parse(origin)
+		return err != nil || !strings.EqualFold(u.Host, r.Host)
+	}
+	return false
 }
 
 func (s *Server) authorized(r *http.Request) bool {

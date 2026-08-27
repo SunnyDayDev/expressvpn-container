@@ -2285,7 +2285,8 @@
                       "fill": "$text-secondary",
                       "content": "ExpressVPN",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -2320,7 +2321,8 @@
                       "fill": "$text-secondary",
                       "content": "Uplink",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -2355,7 +2357,8 @@
                       "fill": "$text-secondary",
                       "content": "Proxy",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -2390,7 +2393,8 @@
                       "fill": "$text-secondary",
                       "content": "Container",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -2425,7 +2429,8 @@
                       "fill": "$text-secondary",
                       "content": "Access",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -2485,7 +2490,8 @@
                       "fill": "$text-secondary",
                       "content": "Diagnostics",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -3816,7 +3822,8 @@
                       "fill": "$text-secondary",
                       "content": "ExpressVPN",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -3851,7 +3858,8 @@
                       "fill": "$text-secondary",
                       "content": "Uplink",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -3886,7 +3894,8 @@
                       "fill": "$text-secondary",
                       "content": "Proxy",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -3921,7 +3930,8 @@
                       "fill": "$text-secondary",
                       "content": "Container",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -3956,7 +3966,8 @@
                       "fill": "$text-secondary",
                       "content": "Access",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -4016,7 +4027,8 @@
                       "fill": "$text-secondary",
                       "content": "Diagnostics",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -5306,7 +5318,8 @@
                       "fill": "$text-secondary",
                       "content": "Dashboard",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -5402,7 +5415,8 @@
                       "fill": "$text-secondary",
                       "content": "Uplink",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -5437,7 +5451,8 @@
                       "fill": "$text-secondary",
                       "content": "Proxy",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -5472,7 +5487,8 @@
                       "fill": "$text-secondary",
                       "content": "Container",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -5507,7 +5523,8 @@
                       "fill": "$text-secondary",
                       "content": "Access",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -5567,7 +5584,8 @@
                       "fill": "$text-secondary",
                       "content": "Diagnostics",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -6625,7 +6643,8 @@
                       "fill": "$text-secondary",
                       "content": "Dashboard",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -6685,7 +6704,8 @@
                       "fill": "$text-secondary",
                       "content": "ExpressVPN",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -6720,7 +6740,8 @@
                       "fill": "$text-secondary",
                       "content": "Uplink",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -6755,7 +6776,8 @@
                       "fill": "$text-secondary",
                       "content": "Proxy",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -6790,7 +6812,8 @@
                       "fill": "$text-secondary",
                       "content": "Container",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -6886,7 +6909,8 @@
                       "fill": "$text-secondary",
                       "content": "Diagnostics",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -7123,6 +7147,17 @@
                                           "descendants": {
                                             "N3EE1": {
                                               "content": "Change…"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "id": "JjyIt",
+                                          "type": "ref",
+                                          "ref": "qlhit",
+                                          "name": "Turn off",
+                                          "descendants": {
+                                            "Z7rSNx": {
+                                              "content": "Turn off…"
                                             }
                                           }
                                         }
@@ -7700,7 +7735,8 @@
                       "fill": "$text-secondary",
                       "content": "Dashboard",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -7760,7 +7796,8 @@
                       "fill": "$text-secondary",
                       "content": "ExpressVPN",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -7831,7 +7868,8 @@
                       "fill": "$text-secondary",
                       "content": "Proxy",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -7866,7 +7904,8 @@
                       "fill": "$text-secondary",
                       "content": "Container",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -7901,7 +7940,8 @@
                       "fill": "$text-secondary",
                       "content": "Access",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -7961,7 +8001,8 @@
                       "fill": "$text-secondary",
                       "content": "Diagnostics",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -9058,7 +9099,8 @@
                       "fill": "$text-secondary",
                       "content": "Dashboard",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -9118,7 +9160,8 @@
                       "fill": "$text-secondary",
                       "content": "ExpressVPN",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -9153,7 +9196,8 @@
                       "fill": "$text-secondary",
                       "content": "Uplink",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -9224,7 +9268,8 @@
                       "fill": "$text-secondary",
                       "content": "Container",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -9259,7 +9304,8 @@
                       "fill": "$text-secondary",
                       "content": "Access",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -9319,7 +9365,8 @@
                       "fill": "$text-secondary",
                       "content": "Diagnostics",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -10282,7 +10329,8 @@
                       "fill": "$text-secondary",
                       "content": "Dashboard",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -10342,7 +10390,8 @@
                       "fill": "$text-secondary",
                       "content": "ExpressVPN",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -10377,7 +10426,8 @@
                       "fill": "$text-secondary",
                       "content": "Uplink",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -10412,7 +10462,8 @@
                       "fill": "$text-secondary",
                       "content": "Proxy",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -10483,7 +10534,8 @@
                       "fill": "$text-secondary",
                       "content": "Access",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -10543,7 +10595,8 @@
                       "fill": "$text-secondary",
                       "content": "Diagnostics",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -11624,7 +11677,8 @@
                       "fill": "$text-secondary",
                       "content": "Dashboard",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -11684,7 +11738,8 @@
                       "fill": "$text-secondary",
                       "content": "ExpressVPN",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -11719,7 +11774,8 @@
                       "fill": "$text-secondary",
                       "content": "Uplink",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -11754,7 +11810,8 @@
                       "fill": "$text-secondary",
                       "content": "Proxy",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -11789,7 +11846,8 @@
                       "fill": "$text-secondary",
                       "content": "Container",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -11824,7 +11882,8 @@
                       "fill": "$text-secondary",
                       "content": "Access",
                       "fontFamily": "$font",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -13301,6 +13360,1572 @@
                   "fontFamily": "$font",
                   "fontSize": 11,
                   "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "BeTjp",
+      "x": 0,
+      "y": 3064,
+      "name": "10b · Web Setup — Admin password (skippable)",
+      "clip": true,
+      "width": 1280,
+      "fill": "$bg-window",
+      "stroke": "$border",
+      "strokeWidth": 1,
+      "strokeAlignment": "inner",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "y7pEF",
+          "name": "Browser Bar",
+          "width": "fill_container",
+          "fill": "#DEDEE3",
+          "gap": 12,
+          "padding": [
+            8,
+            14
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "E7Ruu",
+              "name": "Dots",
+              "gap": 7,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ellipse",
+                  "id": "ZH4a0",
+                  "name": "Dot",
+                  "fill": "#C9C9CE",
+                  "width": 10,
+                  "height": 10
+                },
+                {
+                  "type": "ellipse",
+                  "id": "X8qKep",
+                  "name": "Dot",
+                  "fill": "#C9C9CE",
+                  "width": 10,
+                  "height": 10
+                },
+                {
+                  "type": "ellipse",
+                  "id": "i5x47",
+                  "name": "Dot",
+                  "fill": "#C9C9CE",
+                  "width": 10,
+                  "height": 10
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "zygVI",
+              "name": "Address",
+              "width": "fill_container",
+              "height": 26,
+              "fill": "#FFFFFF",
+              "cornerRadius": 7,
+              "gap": 6,
+              "padding": [
+                0,
+                10
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "kFjDC",
+                  "name": "Lock",
+                  "width": 12,
+                  "height": 12,
+                  "icon": "globe",
+                  "library": "lucide",
+                  "fill": "$text-tertiary"
+                },
+                {
+                  "type": "text",
+                  "id": "y4vzN",
+                  "name": "URL",
+                  "fill": "$text-secondary",
+                  "content": "http://localhost:48100/setup",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "icon",
+              "id": "zKhAg",
+              "name": "Reload",
+              "width": 14,
+              "height": 14,
+              "icon": "rotate-cw",
+              "library": "lucide",
+              "fill": "$text-tertiary"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "RszJx",
+          "name": "Top Nav",
+          "width": "fill_container",
+          "fill": "$bg-panel",
+          "stroke": "$divider",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "strokeAlignment": "inner",
+          "gap": 24,
+          "padding": [
+            12,
+            24
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "CWmG9",
+              "name": "Brand",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "mcAAO",
+                  "name": "Mark",
+                  "width": 26,
+                  "height": 26,
+                  "fill": "$brand",
+                  "cornerRadius": 7,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "V6b5g",
+                      "name": "Icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "corner-up-right",
+                      "library": "lucide",
+                      "fill": "#FFFFFF"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "v9smXh",
+                  "name": "Title",
+                  "fill": "$text-primary",
+                  "content": "Detour",
+                  "fontFamily": "$font",
+                  "fontSize": 15,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "LoFNq",
+                  "name": "Subtitle",
+                  "fill": "$text-tertiary",
+                  "content": "ExpressVPN sidecar",
+                  "fontFamily": "$font",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "KDLus",
+              "name": "Hint",
+              "fill": "$text-tertiary",
+              "content": "first run · not signed in yet",
+              "fontFamily": "$font",
+              "fontSize": 11,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "pWOAH",
+          "name": "Page",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            36,
+            0,
+            48,
+            0
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "K5gV6Q",
+              "name": "Setup Card",
+              "width": 760,
+              "fill": "$bg-panel",
+              "cornerRadius": 12,
+              "stroke": "$border",
+              "strokeAlignment": "inner",
+              "effect": [
+                {
+                  "type": "shadow",
+                  "shadowType": "outer",
+                  "color": "#10182608",
+                  "offset": {
+                    "x": 0,
+                    "y": 1
+                  },
+                  "blur": 2
+                },
+                {
+                  "type": "shadow",
+                  "shadowType": "outer",
+                  "color": "#1018260D",
+                  "offset": {
+                    "x": 0,
+                    "y": 4
+                  },
+                  "blur": 14
+                }
+              ],
+              "layout": "vertical",
+              "padding": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ra8Xv",
+                  "name": "Body",
+                  "width": "fill_container",
+                  "gap": 24,
+                  "padding": [
+                    8,
+                    20,
+                    20,
+                    20
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Qbj78",
+                      "name": "Steps",
+                      "width": 220,
+                      "layout": "vertical",
+                      "gap": 14,
+                      "padding": [
+                        8,
+                        0
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "S4ji6",
+                          "name": "Steps Title",
+                          "fill": "$text-tertiary",
+                          "content": "3 steps · about 2 minutes",
+                          "fontFamily": "$font",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "id": "QuXie",
+                          "type": "ref",
+                          "ref": "zkdjM",
+                          "name": "Step 1",
+                          "width": "fill_container",
+                          "descendants": {
+                            "zgAkc": {
+                              "fill": "$accent"
+                            },
+                            "G74B2H": {
+                              "content": "1",
+                              "fill": "$text-on-accent"
+                            },
+                            "ZWfFL": {
+                              "content": "Admin password",
+                              "fill": "$text-primary"
+                            },
+                            "EpEVR": {
+                              "content": "Optional — create or skip"
+                            },
+                            "fOeL6": {
+                              "icon": "circle-dot",
+                              "fill": "$accent"
+                            }
+                          }
+                        },
+                        {
+                          "id": "U4pQr",
+                          "type": "ref",
+                          "ref": "zkdjM",
+                          "name": "Step 2",
+                          "width": "fill_container",
+                          "descendants": {
+                            "zgAkc": {
+                              "fill": "$bg-chip"
+                            },
+                            "G74B2H": {
+                              "content": "2",
+                              "fill": "$text-secondary"
+                            },
+                            "ZWfFL": {
+                              "content": "Sign in to ExpressVPN",
+                              "fill": "$text-secondary"
+                            },
+                            "EpEVR": {
+                              "content": "Enter your activation code"
+                            },
+                            "fOeL6": {
+                              "icon": "circle-dashed",
+                              "fill": "$text-tertiary"
+                            }
+                          }
+                        },
+                        {
+                          "id": "LmHrZ",
+                          "type": "ref",
+                          "ref": "zkdjM",
+                          "name": "Step 3",
+                          "width": "fill_container",
+                          "descendants": {
+                            "zgAkc": {
+                              "fill": "$bg-chip"
+                            },
+                            "G74B2H": {
+                              "content": "3",
+                              "fill": "$text-secondary"
+                            },
+                            "ZWfFL": {
+                              "content": "First connection",
+                              "fill": "$text-secondary"
+                            },
+                            "EpEVR": {
+                              "content": "Pick a location and connect"
+                            },
+                            "fOeL6": {
+                              "icon": "circle-dashed",
+                              "fill": "$text-tertiary"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "MgHbq",
+                      "name": "Step Panel",
+                      "width": "fill_container",
+                      "fill": "$bg-panel",
+                      "cornerRadius": 10,
+                      "stroke": "$border",
+                      "strokeAlignment": "inner",
+                      "effect": [
+                        {
+                          "type": "shadow",
+                          "shadowType": "outer",
+                          "color": "#10182608",
+                          "offset": {
+                            "x": 0,
+                            "y": 1
+                          },
+                          "blur": 2
+                        },
+                        {
+                          "type": "shadow",
+                          "shadowType": "outer",
+                          "color": "#1018260D",
+                          "offset": {
+                            "x": 0,
+                            "y": 4
+                          },
+                          "blur": 14
+                        }
+                      ],
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": 20,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "CU5tL",
+                          "name": "Panel Header",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 4,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "i3qFSI",
+                              "name": "Title",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Create admin password",
+                              "fontFamily": "$font-display",
+                              "fontSize": 22,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "Ps6GS",
+                              "name": "Subtitle",
+                              "fill": "$text-secondary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Protects this page on your network. On a trusted home network where only you can reach it, you can skip this — and set a password any time in Settings → Access.",
+                              "fontFamily": "$font",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "id": "J99q6Z",
+                          "type": "ref",
+                          "ref": "Eof0M",
+                          "name": "Password Field",
+                          "width": "fill_container",
+                          "descendants": {
+                            "uiBow": {
+                              "content": "Password (min 8 characters)"
+                            },
+                            "fMm1F": {
+                              "content": "••••••••••",
+                              "fontFamily": "JetBrains Mono"
+                            }
+                          }
+                        },
+                        {
+                          "id": "eElIH",
+                          "type": "ref",
+                          "ref": "Eof0M",
+                          "name": "Repeat Password Field",
+                          "width": "fill_container",
+                          "descendants": {
+                            "uiBow": {
+                              "content": "Repeat password"
+                            },
+                            "fMm1F": {
+                              "content": "••••••••••",
+                              "fontFamily": "JetBrains Mono"
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "C4toDn",
+                          "name": "Skip Warning",
+                          "width": "fill_container",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "d7MEa",
+                              "name": "Icon",
+                              "width": 14,
+                              "height": 14,
+                              "icon": "triangle-alert",
+                              "library": "lucide",
+                              "fill": "$warning"
+                            },
+                            {
+                              "type": "text",
+                              "id": "frVbl",
+                              "name": "Text",
+                              "fill": "$text-secondary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "If you skip, anyone who can open this page can control the VPN and change its settings.",
+                              "fontFamily": "$font",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "krCrJ",
+                          "name": "Buttons",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "justifyContent": "end",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "gDDe2",
+                              "name": "Skip",
+                              "fill": "$accent",
+                              "content": "Continue without password",
+                              "fontFamily": "$font",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Q9JABv",
+                              "name": "Spacer",
+                              "width": "fill_container",
+                              "height": 1
+                            },
+                            {
+                              "id": "q9kyL",
+                              "type": "ref",
+                              "ref": "C6kTi",
+                              "name": "Create password",
+                              "descendants": {
+                                "DIMFB": {
+                                  "content": "Create password"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Zquis",
+      "x": 1400,
+      "y": 5902,
+      "name": "5c · Web Settings — Access (password off)",
+      "clip": true,
+      "width": 1280,
+      "fill": "$bg-window",
+      "stroke": "$border",
+      "strokeWidth": 1,
+      "strokeAlignment": "inner",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "T7XCA",
+          "name": "Browser Bar",
+          "width": "fill_container",
+          "fill": "#E4E6E9",
+          "gap": 12,
+          "padding": [
+            8,
+            14
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "L9QJ0",
+              "name": "Dots",
+              "gap": 7,
+              "children": [
+                {
+                  "type": "ellipse",
+                  "id": "MfzhI",
+                  "name": "Dot",
+                  "fill": "#CBCED3",
+                  "width": 10,
+                  "height": 10
+                },
+                {
+                  "type": "ellipse",
+                  "id": "zzpMg",
+                  "name": "Dot",
+                  "fill": "#CBCED3",
+                  "width": 10,
+                  "height": 10
+                },
+                {
+                  "type": "ellipse",
+                  "id": "X4FBq8",
+                  "name": "Dot",
+                  "fill": "#CBCED3",
+                  "width": 10,
+                  "height": 10
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "sRLi8",
+              "name": "Address",
+              "width": "fill_container",
+              "height": 26,
+              "fill": "#FFFFFF",
+              "cornerRadius": 7,
+              "gap": 6,
+              "padding": [
+                0,
+                10
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "eRd8q",
+                  "name": "Globe",
+                  "width": 12,
+                  "height": 12,
+                  "icon": "globe",
+                  "library": "lucide",
+                  "fill": "$text-tertiary"
+                },
+                {
+                  "type": "text",
+                  "id": "WlieV",
+                  "name": "URL",
+                  "fill": "$text-secondary",
+                  "content": "http://localhost:48100/settings/access",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "icon",
+              "id": "VU2Jl",
+              "name": "Reload",
+              "width": 14,
+              "height": 14,
+              "icon": "rotate-cw",
+              "library": "lucide",
+              "fill": "$text-tertiary"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "rs9Er",
+          "name": "Body",
+          "width": "fill_container",
+          "height": 860,
+          "children": [
+            {
+              "type": "frame",
+              "id": "utd9n",
+              "name": "Sidebar",
+              "width": 250,
+              "height": "fill_container",
+              "fill": "$bg-panel",
+              "stroke": "$divider",
+              "strokeWidth": {
+                "right": 1
+              },
+              "strokeAlignment": "inner",
+              "layout": "vertical",
+              "gap": 2,
+              "padding": [
+                16,
+                12
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "b8wyr",
+                  "name": "Brand",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "padding": [
+                    2,
+                    4,
+                    14,
+                    4
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "XTsss",
+                      "name": "Mark",
+                      "width": 30,
+                      "height": 30,
+                      "fill": "$brand",
+                      "cornerRadius": 8,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "L5Lq6",
+                          "name": "Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "corner-up-right",
+                          "library": "lucide",
+                          "fill": "#FFFFFF"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "z2vwe6",
+                      "name": "Names",
+                      "layout": "vertical",
+                      "gap": 1,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "b2EVP",
+                          "name": "Title",
+                          "fill": "$text-primary",
+                          "content": "Detour",
+                          "fontFamily": "$font",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ZnI8h",
+                          "name": "Sub",
+                          "fill": "$text-tertiary",
+                          "content": "ExpressVPN sidecar",
+                          "fontFamily": "$font",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "iDBJx",
+                  "name": "Item Dashboard",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 8,
+                  "gap": 10,
+                  "padding": [
+                    9,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "O9l1i",
+                      "name": "Icon",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "layout-dashboard",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "ehqep",
+                      "name": "Label",
+                      "fill": "$text-secondary",
+                      "content": "Dashboard",
+                      "fontFamily": "$font",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "rEfse",
+                  "name": "Sec SETTINGS",
+                  "width": "fill_container",
+                  "padding": [
+                    10,
+                    12,
+                    4,
+                    12
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "J3fhsF",
+                      "name": "Label",
+                      "fill": "$text-tertiary",
+                      "content": "SETTINGS",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "600",
+                      "letterSpacing": 0.8
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "s5vPAj",
+                  "name": "Item ExpressVPN",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 8,
+                  "gap": 10,
+                  "padding": [
+                    9,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "gbbXK",
+                      "name": "Icon",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "shield",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "jWX0T",
+                      "name": "Label",
+                      "fill": "$text-secondary",
+                      "content": "ExpressVPN",
+                      "fontFamily": "$font",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "IDPDR",
+                  "name": "Item Uplink",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 8,
+                  "gap": 10,
+                  "padding": [
+                    9,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "BmD0P",
+                      "name": "Icon",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "route",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "G7pArA",
+                      "name": "Label",
+                      "fill": "$text-secondary",
+                      "content": "Uplink",
+                      "fontFamily": "$font",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "oGnsQ",
+                  "name": "Item Proxy",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 8,
+                  "gap": 10,
+                  "padding": [
+                    9,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "f6ZWa4",
+                      "name": "Icon",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "plug",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "ezdlE",
+                      "name": "Label",
+                      "fill": "$text-secondary",
+                      "content": "Proxy",
+                      "fontFamily": "$font",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "XDOk8",
+                  "name": "Item Container",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 8,
+                  "gap": 10,
+                  "padding": [
+                    9,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "mCXpy",
+                      "name": "Icon",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "container",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "HI5Ve",
+                      "name": "Label",
+                      "fill": "$text-secondary",
+                      "content": "Container",
+                      "fontFamily": "$font",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "VbpRa",
+                  "name": "Item Access",
+                  "width": "fill_container",
+                  "fill": "$accent-soft",
+                  "cornerRadius": 8,
+                  "gap": 10,
+                  "padding": [
+                    9,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "afHRL",
+                      "name": "Icon",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "key-round",
+                      "library": "lucide",
+                      "fill": "$accent"
+                    },
+                    {
+                      "type": "text",
+                      "id": "DtKvU",
+                      "name": "Label",
+                      "fill": "$text-primary",
+                      "content": "Access",
+                      "fontFamily": "$font",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "RSDDt",
+                  "name": "Sec SYSTEM",
+                  "width": "fill_container",
+                  "padding": [
+                    10,
+                    12,
+                    4,
+                    12
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "kbbiD",
+                      "name": "Label",
+                      "fill": "$text-tertiary",
+                      "content": "SYSTEM",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "600",
+                      "letterSpacing": 0.8
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "tsZnA",
+                  "name": "Item Diagnostics",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "cornerRadius": 8,
+                  "gap": 10,
+                  "padding": [
+                    9,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "mJOC1",
+                      "name": "Icon",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "stethoscope",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "L7Z8l7",
+                      "name": "Label",
+                      "fill": "$text-secondary",
+                      "content": "Diagnostics",
+                      "fontFamily": "$font",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "YT7NM",
+                  "name": "Flex",
+                  "width": 1,
+                  "height": "fill_container"
+                },
+                {
+                  "type": "frame",
+                  "id": "UmEwZ",
+                  "name": "Bottom",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": [
+                    8,
+                    12
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "DELpe",
+                      "name": "Status",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "ellipse",
+                          "id": "j0NxCE",
+                          "name": "Dot",
+                          "fill": "$success",
+                          "width": 8,
+                          "height": 8
+                        },
+                        {
+                          "type": "text",
+                          "id": "uyAc7",
+                          "name": "Text",
+                          "fill": "$text-secondary",
+                          "content": "connected · Germany",
+                          "fontFamily": "$font",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "a0Muj",
+              "name": "Content Col",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "eR6cS",
+                  "name": "Header",
+                  "width": "fill_container",
+                  "padding": [
+                    18,
+                    28,
+                    6,
+                    28
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "PQoM2",
+                      "name": "Page Title",
+                      "fill": "$text-primary",
+                      "content": "Access",
+                      "fontFamily": "$font",
+                      "fontSize": 19,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "id": "hWEkN",
+                      "type": "ref",
+                      "ref": "WtEKc",
+                      "name": "Status Chip",
+                      "descendants": {
+                        "B5FNq": {
+                          "fill": "$success"
+                        },
+                        "kkcEI": {
+                          "content": "connected · Germany"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "MkofP",
+                  "name": "Page",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "padding": [
+                    14,
+                    28,
+                    28,
+                    28
+                  ],
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "sr8ow",
+                      "name": "Content",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 18,
+                      "children": [
+                        {
+                          "id": "Q4DrV",
+                          "type": "ref",
+                          "ref": "g4Ysi",
+                          "name": "Banner password off",
+                          "width": "fill_container",
+                          "descendants": {
+                            "X31yAH": {
+                              "content": "Password protection is off"
+                            },
+                            "ScV0u": {
+                              "content": "Anyone who can open this page can control the VPN and change where its traffic goes. Set a password if others can reach this network."
+                            },
+                            "tpL4W": {
+                              "enabled": false
+                            }
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "PvRQ0",
+                          "name": "Group Access",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 6,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Ofv8f",
+                              "name": "Group Title",
+                              "fill": "$text-secondary",
+                              "content": "Access",
+                              "fontFamily": "$font",
+                              "fontSize": 12,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Azj2p",
+                              "name": "Box",
+                              "width": "fill_container",
+                              "fill": "$bg-panel",
+                              "cornerRadius": 12,
+                              "stroke": "$border",
+                              "strokeAlignment": "inner",
+                              "effect": [
+                                {
+                                  "type": "shadow",
+                                  "shadowType": "outer",
+                                  "color": "#10182608",
+                                  "offset": {
+                                    "x": 0,
+                                    "y": 1
+                                  },
+                                  "blur": 2
+                                },
+                                {
+                                  "type": "shadow",
+                                  "shadowType": "outer",
+                                  "color": "#1018260D",
+                                  "offset": {
+                                    "x": 0,
+                                    "y": 4
+                                  },
+                                  "blur": 14
+                                }
+                              ],
+                              "layout": "vertical",
+                              "padding": [
+                                2,
+                                14
+                              ],
+                              "children": [
+                                {
+                                  "id": "EO5iQ",
+                                  "type": "ref",
+                                  "ref": "Eh1V7",
+                                  "name": "Row Admin password",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "o9LoiC": {
+                                      "content": "Admin password"
+                                    },
+                                    "m7NTL": {
+                                      "content": "Off — anyone who can open this page can control the VPN and change its settings",
+                                      "enabled": true
+                                    },
+                                    "Ux2O0": {
+                                      "type": "frame",
+                                      "id": "f3v9z",
+                                      "name": "Control",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "id": "vs1cU",
+                                          "type": "ref",
+                                          "ref": "C6kTi",
+                                          "name": "Set password",
+                                          "descendants": {
+                                            "DIMFB": {
+                                              "content": "Set password…"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "rectangle",
+                                  "id": "EVGb5",
+                                  "name": "Divider",
+                                  "fill": "$divider",
+                                  "width": "fill_container",
+                                  "height": 1
+                                },
+                                {
+                                  "id": "H9JxN",
+                                  "type": "ref",
+                                  "ref": "Eh1V7",
+                                  "name": "Row API token",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "o9LoiC": {
+                                      "content": "API token"
+                                    },
+                                    "m7NTL": {
+                                      "content": "Bearer token for scripts and automation — not required while the password is off",
+                                      "enabled": true
+                                    },
+                                    "Ux2O0": {
+                                      "type": "frame",
+                                      "id": "b0q1t",
+                                      "name": "Control",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "qxLYw",
+                                          "name": "Token",
+                                          "fill": "$text-secondary",
+                                          "content": "detour_tk_••••9f2a",
+                                          "fontFamily": "JetBrains Mono",
+                                          "fontSize": 12,
+                                          "fontWeight": "normal"
+                                        },
+                                        {
+                                          "id": "FeXk2",
+                                          "type": "ref",
+                                          "ref": "z7lhCx",
+                                          "name": "Reveal",
+                                          "descendants": {
+                                            "a2yACl": {
+                                              "icon": "eye"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "id": "eYFs2",
+                                          "type": "ref",
+                                          "ref": "BRWVi",
+                                          "name": "Rotate",
+                                          "descendants": {
+                                            "N3EE1": {
+                                              "content": "Rotate…"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Dh6rY",
+                          "name": "Group Notifications",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 6,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "wfkaH",
+                              "name": "Group Title",
+                              "fill": "$text-secondary",
+                              "content": "Notifications",
+                              "fontFamily": "$font",
+                              "fontSize": 12,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "O3DAr",
+                              "name": "Box",
+                              "width": "fill_container",
+                              "fill": "$bg-panel",
+                              "cornerRadius": 12,
+                              "stroke": "$border",
+                              "strokeAlignment": "inner",
+                              "effect": [
+                                {
+                                  "type": "shadow",
+                                  "shadowType": "outer",
+                                  "color": "#10182608",
+                                  "offset": {
+                                    "x": 0,
+                                    "y": 1
+                                  },
+                                  "blur": 2
+                                },
+                                {
+                                  "type": "shadow",
+                                  "shadowType": "outer",
+                                  "color": "#1018260D",
+                                  "offset": {
+                                    "x": 0,
+                                    "y": 4
+                                  },
+                                  "blur": 14
+                                }
+                              ],
+                              "layout": "vertical",
+                              "padding": [
+                                2,
+                                14
+                              ],
+                              "children": [
+                                {
+                                  "id": "jqm9V",
+                                  "type": "ref",
+                                  "ref": "Eh1V7",
+                                  "name": "Row Notify on connection problems",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "o9LoiC": {
+                                      "content": "Notify on connection problems"
+                                    },
+                                    "m7NTL": {
+                                      "content": "Browser notifications when auto-reconnect gives up or the uplink goes down",
+                                      "enabled": true
+                                    },
+                                    "Ux2O0": {
+                                      "type": "frame",
+                                      "id": "Q80qGf",
+                                      "name": "Control",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "id": "eWdQL",
+                                          "type": "ref",
+                                          "ref": "M3lp86",
+                                          "name": "Toggle"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "geTwc",
+                          "name": "Group Language",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 6,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "S69sz",
+                              "name": "Group Title",
+                              "fill": "$text-secondary",
+                              "content": "Language",
+                              "fontFamily": "$font",
+                              "fontSize": 12,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "P7sgvO",
+                              "name": "Box",
+                              "width": "fill_container",
+                              "fill": "$bg-panel",
+                              "cornerRadius": 12,
+                              "stroke": "$border",
+                              "strokeAlignment": "inner",
+                              "effect": [
+                                {
+                                  "type": "shadow",
+                                  "shadowType": "outer",
+                                  "color": "#10182608",
+                                  "offset": {
+                                    "x": 0,
+                                    "y": 1
+                                  },
+                                  "blur": 2
+                                },
+                                {
+                                  "type": "shadow",
+                                  "shadowType": "outer",
+                                  "color": "#1018260D",
+                                  "offset": {
+                                    "x": 0,
+                                    "y": 4
+                                  },
+                                  "blur": 14
+                                }
+                              ],
+                              "layout": "vertical",
+                              "padding": [
+                                2,
+                                14
+                              ],
+                              "children": [
+                                {
+                                  "id": "VqfJ1",
+                                  "type": "ref",
+                                  "ref": "Eh1V7",
+                                  "name": "Row Interface language",
+                                  "width": "fill_container",
+                                  "descendants": {
+                                    "o9LoiC": {
+                                      "content": "Interface language"
+                                    },
+                                    "m7NTL": {
+                                      "content": "Follows the browser language · English / Русский",
+                                      "enabled": true
+                                    },
+                                    "Ux2O0": {
+                                      "type": "frame",
+                                      "id": "C06TF",
+                                      "name": "Control",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "llLeF",
+                                          "name": "Popup System (Русский)",
+                                          "fill": "$bg-control",
+                                          "cornerRadius": 6,
+                                          "stroke": "$border",
+                                          "strokeWidth": 1,
+                                          "strokeAlignment": "inner",
+                                          "gap": 6,
+                                          "padding": [
+                                            4,
+                                            8,
+                                            4,
+                                            10
+                                          ],
+                                          "alignItems": "center",
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "j6XUJ",
+                                              "name": "Value",
+                                              "fill": "$text-primary",
+                                              "content": "System (Русский)",
+                                              "fontFamily": "$font",
+                                              "fontSize": 12,
+                                              "fontWeight": "normal"
+                                            },
+                                            {
+                                              "type": "icon",
+                                              "id": "R8oXAO",
+                                              "name": "Chevron",
+                                              "width": 12,
+                                              "height": 12,
+                                              "icon": "chevrons-up-down",
+                                              "library": "lucide",
+                                              "fill": "$text-tertiary"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }

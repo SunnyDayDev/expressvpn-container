@@ -222,6 +222,194 @@ func TestResetPasswordClearsHashAndSessions(t *testing.T) {
 	}
 }
 
+func (e *authEnv) status(t *testing.T, c *http.Client) map[string]bool {
+	t.Helper()
+	resp := e.get(t, c, "/v1/auth/status")
+	var st map[string]bool
+	json.NewDecoder(resp.Body).Decode(&st)
+	return st
+}
+
+func TestSkipDisablesAuthOnFreshVolume(t *testing.T) {
+	e := newAuthEnv(t)
+	c := e.client(t)
+
+	if resp := e.post(t, c, "/v1/auth/skip", `{}`); resp.StatusCode != 200 {
+		t.Fatalf("skip: %d", resp.StatusCode)
+	}
+	st := e.status(t, c)
+	if st["passwordSet"] || !st["authDisabled"] || !st["authenticated"] {
+		t.Fatalf("status after skip=%v", st)
+	}
+	// Все запросы проходят без сессии, токена и CSRF.
+	if resp := e.get(t, c, "/v1/state"); resp.StatusCode != 200 {
+		t.Fatalf("state while disabled: %d", resp.StatusCode)
+	}
+	req, _ := http.NewRequest("PATCH", e.srv.URL+"/v1/config", strings.NewReader(`{"expressvpn":{"protocol":"auto"}}`))
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.StatusCode != 200 {
+		t.Fatalf("mutation while disabled: %d", resp.StatusCode)
+	}
+	// Повторный skip — состояние уже не unset.
+	if resp := e.post(t, c, "/v1/auth/skip", `{}`); resp.StatusCode != 409 {
+		t.Fatalf("double skip: %d want 409", resp.StatusCode)
+	}
+}
+
+func TestSkipUnavailableOncePasswordSet(t *testing.T) {
+	e := newAuthEnv(t)
+	c := e.client(t)
+	e.post(t, c, "/v1/auth/setup", `{"password":"correct-horse"}`)
+
+	if resp := e.post(t, c, "/v1/auth/skip", `{}`); resp.StatusCode != 409 {
+		t.Fatalf("skip after setup: %d want 409", resp.StatusCode)
+	}
+	if e.sessions.AuthDisabled() {
+		t.Fatal("protection must stay on")
+	}
+}
+
+func TestDisableRequiresCurrentPassword(t *testing.T) {
+	e := newAuthEnv(t)
+	c := e.client(t)
+	e.post(t, c, "/v1/auth/setup", `{"password":"correct-horse"}`)
+
+	if resp := e.post(t, c, "/v1/auth/disable", `{"current":"wrong-pass"}`); resp.StatusCode != 401 {
+		t.Fatalf("disable with wrong password: %d want 401", resp.StatusCode)
+	}
+	// Защита на месте: свежий клиент без сессии получает 401.
+	if resp := e.get(t, e.client(t), "/v1/state"); resp.StatusCode != 401 {
+		t.Fatal("protection must stay on after failed disable")
+	}
+
+	if resp := e.post(t, c, "/v1/auth/disable", `{"current":"correct-horse"}`); resp.StatusCode != 200 {
+		t.Fatalf("disable: %d", resp.StatusCode)
+	}
+	// Теперь открыто для всех.
+	if resp := e.get(t, e.client(t), "/v1/state"); resp.StatusCode != 200 {
+		t.Fatal("state must be open after disable")
+	}
+	st := e.status(t, e.client(t))
+	if st["passwordSet"] || !st["authDisabled"] {
+		t.Fatalf("status after disable=%v", st)
+	}
+}
+
+func TestDisableSharesLoginThrottle(t *testing.T) {
+	e := newAuthEnv(t)
+	c := e.client(t)
+	e.post(t, c, "/v1/auth/setup", `{"password":"correct-horse"}`)
+
+	// 3 неверных login + 2 неверных disable → общий счётчик добит до 5.
+	for i := 0; i < 3; i++ {
+		e.post(t, c, "/v1/auth/login", `{"password":"wrong-pass"}`)
+	}
+	for i := 0; i < 2; i++ {
+		e.post(t, c, "/v1/auth/disable", `{"current":"wrong-pass"}`)
+	}
+	if resp := e.post(t, c, "/v1/auth/disable", `{"current":"correct-horse"}`); resp.StatusCode != 429 {
+		t.Fatalf("throttled disable: %d want 429", resp.StatusCode)
+	}
+}
+
+func TestSetupReenablesAfterDisable(t *testing.T) {
+	e := newAuthEnv(t)
+	c := e.client(t)
+	e.post(t, c, "/v1/auth/skip", `{}`)
+
+	if resp := e.post(t, c, "/v1/auth/setup", `{"password":"brand-new-pass"}`); resp.StatusCode != 200 {
+		t.Fatalf("setup after skip: %d", resp.StatusCode)
+	}
+	// Создатель пароля получил сессию, посторонние — 401.
+	if resp := e.get(t, c, "/v1/state"); resp.StatusCode != 200 {
+		t.Fatalf("creator session: %d", resp.StatusCode)
+	}
+	if resp := e.get(t, e.client(t), "/v1/state"); resp.StatusCode != 401 {
+		t.Fatal("protection must be on after setup")
+	}
+	st := e.status(t, c)
+	if !st["passwordSet"] || st["authDisabled"] {
+		t.Fatalf("status after re-enable=%v", st)
+	}
+}
+
+func TestCrossSiteMutationsBlockedWhileDisabled(t *testing.T) {
+	e := newAuthEnv(t)
+	c := e.client(t)
+	e.post(t, c, "/v1/auth/skip", `{}`)
+
+	patch := func(hdr map[string]string) int {
+		req, _ := http.NewRequest("PATCH", e.srv.URL+"/v1/config", strings.NewReader(`{"expressvpn":{"protocol":"auto"}}`))
+		for k, v := range hdr {
+			req.Header.Set(k, v)
+		}
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return resp.StatusCode
+	}
+	u, _ := url.Parse(e.srv.URL)
+
+	// Чужой Origin и явный cross-site — блок.
+	if code := patch(map[string]string{"Origin": "http://evil.example"}); code != 403 {
+		t.Fatalf("cross-origin mutation: %d want 403", code)
+	}
+	if code := patch(map[string]string{"Sec-Fetch-Site": "cross-site", "Origin": "http://" + u.Host}); code != 403 {
+		t.Fatalf("sec-fetch-site cross-site: %d want 403", code)
+	}
+	// Same-origin браузер и клиенты без заголовков — проходят.
+	if code := patch(map[string]string{"Origin": "http://" + u.Host}); code != 200 {
+		t.Fatalf("same-origin mutation: %d want 200", code)
+	}
+	if code := patch(map[string]string{"Sec-Fetch-Site": "same-origin"}); code != 200 {
+		t.Fatalf("sec-fetch-site same-origin: %d want 200", code)
+	}
+	if code := patch(nil); code != 200 {
+		t.Fatalf("headerless mutation: %d want 200", code)
+	}
+	// GET не ограничивается даже с чужим Origin.
+	req, _ := http.NewRequest("GET", e.srv.URL+"/v1/state", nil)
+	req.Header.Set("Origin", "http://evil.example")
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.StatusCode != 200 {
+		t.Fatalf("cross-origin GET: %d want 200", resp.StatusCode)
+	}
+	// Setup с чужого сайта при выключенной защите — блок (lockout-защита).
+	req2, _ := http.NewRequest("POST", e.srv.URL+"/v1/auth/setup", strings.NewReader(`{"password":"evil-password"}`))
+	req2.Header.Set("Origin", "http://evil.example")
+	resp2, err := http.DefaultClient.Do(req2)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp2.StatusCode != 403 {
+		t.Fatalf("cross-site setup while disabled: %d want 403", resp2.StatusCode)
+	}
+}
+
+func TestResetPasswordClearsDisabledMarker(t *testing.T) {
+	e := newAuthEnv(t)
+	c := e.client(t)
+	e.post(t, c, "/v1/auth/skip", `{}`)
+
+	if err := ResetPassword(e.authDir); err != nil {
+		t.Fatal(err)
+	}
+	st := e.status(t, c)
+	if st["passwordSet"] || st["authDisabled"] {
+		t.Fatalf("status after reset=%v (want fresh volume)", st)
+	}
+	if resp := e.get(t, c, "/v1/state"); resp.StatusCode != 401 {
+		t.Fatal("auth must be required again after reset")
+	}
+}
+
 func TestCSRFRequiredForMutations(t *testing.T) {
 	e := newAuthEnv(t)
 	c := e.client(t)
