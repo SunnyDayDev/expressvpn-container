@@ -195,6 +195,8 @@ func (s *Server) handleEvents(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Cache-Control", "no-store")
+	// nginx (например, reverse proxy DSM) буферизует ответы и задерживает SSE-события
+	w.Header().Set("X-Accel-Buffering", "no")
 	w.WriteHeader(http.StatusOK)
 
 	ch, cancel := s.deps.State.Subscribe()
@@ -374,6 +376,8 @@ func (s *Server) handleLogsStream(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Cache-Control", "no-store")
+	// nginx (например, reverse proxy DSM) буферизует ответы и задерживает SSE-события
+	w.Header().Set("X-Accel-Buffering", "no")
 	w.WriteHeader(http.StatusOK)
 
 	ch, cancel := s.deps.Logs.Subscribe()
