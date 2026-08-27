@@ -36,7 +36,8 @@ const (
 
 // SessionManager — пароль администратора (argon2id-хэш в томе) и cookie-сессии.
 type SessionManager struct {
-	path string // <dataDir>/auth/password
+	path         string // <dataDir>/auth/password
+	disabledPath string // <dataDir>/auth/disabled — защита сознательно выключена
 
 	mu       sync.Mutex
 	sessions map[string]sessionInfo
@@ -53,8 +54,9 @@ type sessionInfo struct {
 
 func NewSessionManager(authDir string) *SessionManager {
 	return &SessionManager{
-		path:     filepath.Join(authDir, "password"),
-		sessions: map[string]sessionInfo{},
+		path:         filepath.Join(authDir, "password"),
+		disabledPath: filepath.Join(authDir, "disabled"),
+		sessions:     map[string]sessionInfo{},
 	}
 }
 
@@ -62,6 +64,49 @@ func NewSessionManager(authDir string) *SessionManager {
 func (m *SessionManager) HasPassword() bool {
 	_, err := os.Stat(m.path)
 	return err == nil
+}
+
+// AuthDisabled — защита паролем сознательно выключена (маркер в томе).
+// Конфликт «есть и пароль, и маркер» разрешается в пользу пароля.
+func (m *SessionManager) AuthDisabled() bool {
+	if m.HasPassword() {
+		os.Remove(m.disabledPath)
+		return false
+	}
+	_, err := os.Stat(m.disabledPath)
+	return err == nil
+}
+
+// ErrPasswordSet — операция допустима только пока пароль не задан.
+var ErrPasswordSet = fmt.Errorf("password already set")
+
+// Skip выключает защиту на свежем томе (пароль ещё не задавался).
+func (m *SessionManager) Skip() error {
+	if m.HasPassword() {
+		return ErrPasswordSet
+	}
+	if err := os.MkdirAll(filepath.Dir(m.disabledPath), 0o700); err != nil {
+		return err
+	}
+	return os.WriteFile(m.disabledPath, nil, 0o600)
+}
+
+// Disable снимает установленный пароль (подтверждение текущим — под общим
+// с login троттлингом) и выключает защиту; все сессии сбрасываются.
+// Маркер пишется до удаления хэша: при сбое между шагами пароль побеждает.
+func (m *SessionManager) Disable(password string) (bool, error) {
+	ok, err := m.VerifyPassword(password)
+	if err != nil || !ok {
+		return ok, err
+	}
+	if err := os.WriteFile(m.disabledPath, nil, 0o600); err != nil {
+		return false, err
+	}
+	if err := os.Remove(m.path); err != nil && !os.IsNotExist(err) {
+		return false, err
+	}
+	m.DropAllSessions()
+	return true, nil
 }
 
 func (m *SessionManager) pwVersion() string {
@@ -86,7 +131,14 @@ func (m *SessionManager) SetPassword(password string) error {
 	if err := os.MkdirAll(filepath.Dir(m.path), 0o700); err != nil {
 		return err
 	}
-	return os.WriteFile(m.path, []byte(phc+"\n"), 0o600)
+	if err := os.WriteFile(m.path, []byte(phc+"\n"), 0o600); err != nil {
+		return err
+	}
+	// Установка пароля включает защиту обратно.
+	if err := os.Remove(m.disabledPath); err != nil && !os.IsNotExist(err) {
+		return err
+	}
+	return nil
 }
 
 // VerifyPassword сверяет пароль с хэшем; учитывает троттлинг.
@@ -226,11 +278,14 @@ func clearSessionCookies(w http.ResponseWriter) {
 }
 
 // ResetPassword — команда `detour-agent reset-password` (запускается с хоста
-// отдельным процессом): удаляет хэш; работающий агент заметит смену версии
-// файла и отбросит все сессии.
+// отдельным процессом): удаляет хэш и маркер выключенной защиты — состояние
+// возвращается в «свежий том»; работающий агент заметит смену версии файла
+// и отбросит все сессии.
 func ResetPassword(authDir string) error {
-	path := filepath.Join(authDir, "password")
-	if err := os.Remove(path); err != nil && !os.IsNotExist(err) {
+	if err := os.Remove(filepath.Join(authDir, "password")); err != nil && !os.IsNotExist(err) {
+		return err
+	}
+	if err := os.Remove(filepath.Join(authDir, "disabled")); err != nil && !os.IsNotExist(err) {
 		return err
 	}
 	return nil

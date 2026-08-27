@@ -36,6 +36,8 @@ export const api = {
 
   authStatus: () => request('GET', '/v1/auth/status'),
   setup: (password) => request('POST', '/v1/auth/setup', { password }),
+  skip: () => request('POST', '/v1/auth/skip', {}),
+  disableAuth: (current) => request('POST', '/v1/auth/disable', { current }),
   login: (password) => request('POST', '/v1/auth/login', { password }),
   logout: () => request('POST', '/v1/auth/logout', {}),
   logoutAll: () => request('POST', '/v1/auth/logout-all', {}),

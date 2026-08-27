@@ -1,7 +1,7 @@
 <script>
   import { api } from '../lib/api.js'
   import { t } from '../lib/i18n.js'
-  import { appState, refreshState, startEvents } from '../lib/store.js'
+  import { appState, authDisabled, refreshState, startEvents } from '../lib/store.js'
 
   let { done } = $props()
 
@@ -25,6 +25,23 @@
     busy = true
     try {
       await api.setup(password)
+      await refreshState()
+      startEvents()
+      step = 2
+    } catch (err) {
+      error = err.message
+    } finally {
+      busy = false
+    }
+  }
+
+  // Пропуск пароля (артборд 10b): защита выключается, онбординг продолжается.
+  async function skipPassword() {
+    error = ''
+    busy = true
+    try {
+      await api.skip()
+      authDisabled.set(true)
       await refreshState()
       startEvents()
       step = 2
@@ -93,6 +110,8 @@
         <input type="password" placeholder={$t('setup.password2')} bind:value={password2} />
         {#if error}<div class="field-error">{error}</div>{/if}
         <button class="btn-primary" disabled={busy || password.length < 8}>{$t('setup.continue')}</button>
+        <button type="button" class="btn-secondary" disabled={busy} onclick={skipPassword}>{$t('setup.nopass')}</button>
+        <div class="small muted">{$t('setup.nopass.warn')}</div>
       </form>
     {:else if step === 2}
       <h1>{$t('setup.evpn')}</h1>

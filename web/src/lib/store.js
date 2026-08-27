@@ -7,6 +7,9 @@ import { notifyStateTransition } from './notify.js'
 export const appState = writable(null)
 // true — SSE живо; false — «агент недоступен» (бейдж в шапке).
 export const agentOnline = writable(true)
+// true — защита паролем сознательно выключена (auth/status.authDisabled):
+// сессий нет, «Sign out» и «Sessions» не показываются.
+export const authDisabled = writable(false)
 
 let es = null
 let prev = null

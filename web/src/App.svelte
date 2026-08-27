@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte'
   import { api } from './lib/api.js'
-  import { appState, agentOnline, startEvents, stopEvents, refreshState } from './lib/store.js'
+  import { appState, agentOnline, authDisabled, startEvents, stopEvents, refreshState } from './lib/store.js'
   import { route, go } from './lib/router.js'
   import { t } from './lib/i18n.js'
 
@@ -21,7 +21,12 @@
   async function boot() {
     try {
       const st = await api.authStatus()
-      if (!st.passwordSet) phase = 'setup'
+      authDisabled.set(!!st.authDisabled)
+      if (st.authDisabled) {
+        phase = 'app'
+        await refreshState()
+        startEvents()
+      } else if (!st.passwordSet) phase = 'setup'
       else if (!st.authenticated) phase = 'login'
       else {
         phase = 'app'
@@ -100,7 +105,9 @@
       <a class="side-link" class:active={$route === '/diagnostics'} href="#/diagnostics">{$t('nav.diagnostics')}</a>
 
       <div style="flex:1"></div>
-      <button class="btn-secondary" style="margin:8px 10px" onclick={signOut}>{$t('nav.signout')}</button>
+      {#if !$authDisabled}
+        <button class="btn-secondary" style="margin:8px 10px" onclick={signOut}>{$t('nav.signout')}</button>
+      {/if}
     </nav>
 
     <main class="content">

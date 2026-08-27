@@ -28,14 +28,21 @@ func readJSONBody(w http.ResponseWriter, r *http.Request, v any) bool {
 
 // GET /v1/auth/status — публичный: UI решает, показывать setup, login или app.
 func (s *Server) handleAuthStatus(w http.ResponseWriter, r *http.Request) {
+	disabled := s.deps.Sessions.AuthDisabled()
 	writeJSON(w, http.StatusOK, map[string]bool{
 		"passwordSet":   s.deps.Sessions.HasPassword(),
-		"authenticated": s.authorized(r),
+		"authDisabled":  disabled,
+		"authenticated": disabled || s.authorized(r),
 	})
 }
 
-// POST /v1/auth/setup — создание пароля администратора (только пока не задан).
+// POST /v1/auth/setup — создание пароля администратора (пока не задан:
+// свежий том или выключенная защита; во втором случае включает защиту).
 func (s *Server) handleAuthSetup(w http.ResponseWriter, r *http.Request) {
+	if s.deps.Sessions.AuthDisabled() && crossSiteBlocked(r) {
+		writeJSON(w, http.StatusForbidden, map[string]string{"error": "cross_site_blocked"})
+		return
+	}
 	if s.deps.Sessions.HasPassword() {
 		writeJSON(w, http.StatusConflict, map[string]string{"error": "password already set"})
 		return
@@ -58,6 +65,54 @@ func (s *Server) handleAuthSetup(w http.ResponseWriter, r *http.Request) {
 	}
 	session, csrf := s.deps.Sessions.CreateSession()
 	setSessionCookies(w, session, csrf)
+	writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
+}
+
+// POST /v1/auth/skip — выключает защиту на свежем томе (только пока пароль
+// ещё не задавался и защита не выключена ранее).
+func (s *Server) handleAuthSkip(w http.ResponseWriter, r *http.Request) {
+	if s.deps.Sessions.HasPassword() {
+		writeJSON(w, http.StatusConflict, map[string]string{"error": "password already set"})
+		return
+	}
+	if s.deps.Sessions.AuthDisabled() {
+		writeJSON(w, http.StatusConflict, map[string]string{"error": "already disabled"})
+		return
+	}
+	if err := s.deps.Sessions.Skip(); err != nil {
+		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
+}
+
+// POST /v1/auth/disable — снимает установленный пароль (подтверждение текущим,
+// общий с login троттлинг) и выключает защиту; все сессии сбрасываются.
+func (s *Server) handleAuthDisable(w http.ResponseWriter, r *http.Request) {
+	if !s.deps.Sessions.HasPassword() {
+		writeJSON(w, http.StatusConflict, map[string]string{"error": "no password set"})
+		return
+	}
+	var body struct {
+		Current string `json:"current"`
+	}
+	if !readJSONBody(w, r, &body) {
+		return
+	}
+	ok, err := s.deps.Sessions.Disable(body.Current)
+	if errors.Is(err, ErrThrottled) {
+		writeJSON(w, http.StatusTooManyRequests, map[string]string{"error": "too_many_attempts"})
+		return
+	}
+	if err != nil {
+		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		return
+	}
+	if !ok {
+		writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "wrong_password"})
+		return
+	}
+	clearSessionCookies(w)
 	writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
 }
 
