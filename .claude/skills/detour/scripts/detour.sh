@@ -44,6 +44,7 @@ if [ -f "$config_file" ]; then
   . "$config_file"
 fi
 DETOUR_URL="${env_url:-${DETOUR_URL:-http://127.0.0.1:48100}}"
+DETOUR_URL="${DETOUR_URL%/}" # хвостовой слэш дал бы //v1/… и редирект от mux
 DETOUR_TOKEN="${env_token:-${DETOUR_TOKEN:-}}"
 DETOUR_TOKEN_CMD="${env_token_cmd:-${DETOUR_TOKEN_CMD:-}}"
 if [ -z "$DETOUR_TOKEN" ] && [ -n "$DETOUR_TOKEN_CMD" ]; then
