@@ -89,8 +89,15 @@ curl -sS -H "Authorization: Bearer $TOKEN" http://127.0.0.1:48100/v1/state | jq
 
 В репозитории публикуется навык для Claude Code —
 [.claude/skills/detour](.claude/skills/detour/SKILL.md): агент сможет по просьбе
-переключать локации, проверять туннель и читать логи. Установка и настройка
-(куда положить адрес и токен) — [docs/skill.md](docs/skill.md).
+переключать локации, проверять туннель и читать логи. Репозиторий одновременно
+является маркетплейсом плагинов, так что установка — две команды:
+
+```
+/plugin marketplace add SunnyDayDev/expressvpn-container
+/plugin install detour@detour
+```
+
+Настройка (куда положить адрес и токен) — [docs/skill.md](docs/skill.md).
 
 ## Развёртывание на NAS (Linux)
 

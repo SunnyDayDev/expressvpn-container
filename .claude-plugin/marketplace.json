@@ -1,0 +1,13 @@
+{
+  "name": "detour",
+  "owner": { "name": "SunnyDayDev", "url": "https://github.com/SunnyDayDev" },
+  "description": "Плагины Detour — ExpressVPN sidecar-контейнера",
+  "plugins": [
+    {
+      "name": "detour",
+      "source": "./.claude/skills/detour",
+      "description": "Управление Detour через HTTP API агента: статус VPN, подключение и отключение, смена локации и протокола, настройки uplink, selfcheck, логи",
+      "version": "0.1.0"
+    }
+  ]
+}

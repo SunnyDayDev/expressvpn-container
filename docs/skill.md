@@ -9,15 +9,39 @@
 ## Подключение
 
 Внутри этого репозитория навык работает сразу — Claude Code подхватывает
-проектные навыки из `.claude/skills/`. Чтобы управлять Detour из любой другой
-директории, установите навык как персональный:
+проектные навыки из `.claude/skills/`.
 
-```bash
-cp -R .claude/skills/detour ~/.claude/skills/detour
+Чтобы управлять Detour с любой машины и из любой директории, репозиторий
+опубликован как маркетплейс плагинов Claude Code (манифест —
+[.claude-plugin/marketplace.json](../.claude-plugin/marketplace.json)).
+В сессии Claude Code:
+
+```
+/plugin marketplace add SunnyDayDev/expressvpn-container
+/plugin install detour@detour
 ```
 
-(или symlink на клон репозитория, чтобы навык обновлялся вместе с ним:
-`ln -s "$(pwd)/.claude/skills/detour" ~/.claude/skills/detour`).
+то же из терминала:
+
+```bash
+claude plugin marketplace add SunnyDayDev/expressvpn-container
+```
+
+```bash
+claude plugin install detour@detour
+```
+
+Проверить установку: `claude plugin details detour@detour` (должно показать
+`Skills (1): detour`). Маркетплейсы не автообновляются: после изменений навыка
+в репозитории выполните `/plugin marketplace update detour` (или включите
+автообновление в `/plugin` → Marketplaces).
+
+Альтернатива без плагина — персональная копия или symlink на клон репозитория
+(обновляется вместе с ним):
+
+```bash
+ln -s "$(pwd)/.claude/skills/detour" ~/.claude/skills/detour
+```
 
 ## Настройка адреса и токена
 
@@ -36,11 +60,15 @@ EOF
 chmod 600 ~/.config/detour/env
 ```
 
-Проверка:
+Проверка — из клона репозитория:
 
 ```bash
-~/.claude/skills/detour/scripts/detour.sh state
+.claude/skills/detour/scripts/detour.sh state
 ```
+
+или просто попросите Claude: «проверь статус Detour» — навык вызовет тот же
+скрипт сам (при установке плагином он лежит в
+`~/.claude/plugins/cache/detour/detour/<версия>/scripts/`).
 
 ### Куда ещё можно положить токен
 
@@ -67,7 +95,7 @@ chmod 600 ~/.config/detour/env
 
 ```bash
 DETOUR_URL=https://expressvpn.home DETOUR_TOKEN=dtr_… \
-  ~/.claude/skills/detour/scripts/detour.sh state
+  .claude/skills/detour/scripts/detour.sh state
 ```
 
 или отдельного файла: `DETOUR_CONFIG=~/.config/detour/nas.env detour.sh state`.
