@@ -1,0 +1,6 @@
+{
+  "name": "detour",
+  "description": "Управление Detour (ExpressVPN sidecar-контейнер) через HTTP API агента",
+  "version": "0.1.0",
+  "author": { "name": "SunnyDayDev", "url": "https://github.com/SunnyDayDev" }
+}

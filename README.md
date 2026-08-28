@@ -75,6 +75,30 @@ Settings → Uplink → `socks5`, укажите хост и порт вашег
   Detour автоматически подключает ExpressVPN по `lightway_tcp` (видно в
   `protocol.effective` на дашборде).
 
+## API и навык для Claude Code
+
+Всё, что умеет веб‑интерфейс, доступно по HTTP/JSON API (`/v1` на том же порту):
+статус, смена локации и протокола, настройки uplink, selfcheck, логи. Скриптам
+нужен Bearer‑токен (UI → Settings → Access). Справочник с примерами —
+[docs/api.md](docs/api.md).
+
+```bash
+TOKEN=$(docker exec detour-expressvpn cat /data/auth/token)
+curl -sS -H "Authorization: Bearer $TOKEN" http://127.0.0.1:48100/v1/state | jq
+```
+
+В репозитории публикуется навык для Claude Code —
+[.claude/skills/detour](.claude/skills/detour/SKILL.md): агент сможет по просьбе
+переключать локации, проверять туннель и читать логи. Репозиторий одновременно
+является маркетплейсом плагинов, так что установка — две команды:
+
+```
+/plugin marketplace add SunnyDayDev/expressvpn-container
+/plugin install detour@detour
+```
+
+Настройка (куда положить адрес и токен) — [docs/skill.md](docs/skill.md).
+
 ## Развёртывание на NAS (Linux)
 
 ### Минимальный набор файлов для сборки
@@ -236,5 +260,6 @@ docker compose exec detour detour-agent reset-password
 - `web/` — веб‑интерфейс (Svelte + Vite), собирается в образ и встраивается в агент
 - `docker-compose.yml` + `.env.example` — единственный способ развёртывания
 - `design/` — макеты интерфейса (Pencil) и их описание
-- `docs/` — спайки и runbook (сборка, проверка утечек, эксплуатация)
+- `docs/` — справочник API, спайки и runbook (сборка, проверка утечек, эксплуатация)
+- `.claude/skills/detour/` — навык Claude Code для управления через API
 - `openspec/` — спецификации и задачи (OpenSpec)
