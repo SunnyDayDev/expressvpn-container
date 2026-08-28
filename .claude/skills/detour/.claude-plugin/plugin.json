@@ -1,6 +1,24 @@
 {
   "name": "detour",
   "description": "Управление Detour (ExpressVPN sidecar-контейнер) через HTTP API агента",
-  "version": "0.1.0",
-  "author": { "name": "SunnyDayDev", "url": "https://github.com/SunnyDayDev" }
+  "version": "0.2.0",
+  "author": { "name": "SunnyDayDev", "url": "https://github.com/SunnyDayDev" },
+  "homepage": "https://github.com/SunnyDayDev/expressvpn-container/blob/main/docs/skill.md",
+  "repository": "https://github.com/SunnyDayDev/expressvpn-container",
+  "license": "MIT",
+  "keywords": ["vpn", "expressvpn", "proxy", "socks5", "docker", "detour"],
+  "userConfig": {
+    "url": {
+      "type": "string",
+      "title": "Адрес API агента Detour",
+      "description": "Например http://127.0.0.1:48100 или https://expressvpn.home",
+      "default": "http://127.0.0.1:48100"
+    },
+    "token": {
+      "type": "string",
+      "title": "API-токен",
+      "description": "UI → Settings → Access. Можно оставить пустым, если защита паролем выключена",
+      "sensitive": true
+    }
+  }
 }

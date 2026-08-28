@@ -14,7 +14,8 @@ Detour — контейнер с ExpressVPN, который выставляет
 ## Как обращаться к API
 
 Используй скрипт [scripts/detour.sh](scripts/detour.sh) — он сам разрешает адрес
-и токен (переменные `DETOUR_URL`/`DETOUR_TOKEN`/`DETOUR_TOKEN_CMD` или файл
+и токен (переменные `DETOUR_URL`/`DETOUR_TOKEN`/`DETOUR_TOKEN_CMD`, настройки
+плагина `CLAUDE_PLUGIN_OPTION_URL`/`CLAUDE_PLUGIN_OPTION_TOKEN` или файл
 `~/.config/detour/env`) и умеет ждать завершения асинхронных операций:
 
 ```bash
@@ -29,10 +30,17 @@ scripts/detour.sh logs uplink 100
 `Authorization: Bearer $DETOUR_TOKEN` на `$DETOUR_URL` (по умолчанию
 `http://127.0.0.1:48100`).
 
+Если навык установлен как плагин, адрес и токен задаются при включении плагина;
+настроенный адрес подставлен сюда: `${user_config.url}` (литеральный `${…}`
+означает, что навык загружен как проектный — бери значения из источников выше).
+Токен в текст навыка не подставляется намеренно: скрипт читает его из окружения,
+в контекст и вывод токен попадать не должен.
+
 Если и URL, и токен не настроены (`state` возвращает ошибку соединения или
 `401 unauthorized`) — не подбирай значения: скажи пользователю настроить
-подключение по инструкции docs/skill.md (файл `~/.config/detour/env` с
-`DETOUR_URL` и `DETOUR_TOKEN`; токен виден в UI → Settings → Access).
+подключение — при установке плагином задать адрес и токен в `/plugin` → detour,
+иначе по инструкции docs/skill.md (файл `~/.config/detour/env` с `DETOUR_URL` и
+`DETOUR_TOKEN`; токен виден в UI → Settings → Access).
 
 ## Типовые задачи
 

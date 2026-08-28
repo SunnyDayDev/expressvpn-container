@@ -3,7 +3,10 @@
 #
 # Подключение (в порядке приоритета):
 #   1) переменные окружения DETOUR_URL, DETOUR_TOKEN (или DETOUR_TOKEN_CMD);
-#   2) файл ${XDG_CONFIG_HOME:-~/.config}/detour/env (chmod 600) с теми же
+#   2) настройки плагина Claude Code — CLAUDE_PLUGIN_OPTION_URL и
+#      CLAUDE_PLUGIN_OPTION_TOKEN из userConfig плагина detour (задаются при
+#      включении плагина; вне сессии Claude Code этих переменных нет);
+#   3) файл ${XDG_CONFIG_HOME:-~/.config}/detour/env (chmod 600) с теми же
 #      переменными; путь можно переопределить через DETOUR_CONFIG.
 # DETOUR_TOKEN_CMD — команда, печатающая токен (например, macOS Keychain:
 #   security find-generic-password -s detour -w). Используется, если
@@ -34,18 +37,20 @@ EOF
   exit 1
 }
 
-# --- разрешение URL и токена: явный env поверх конфиг-файла ---
+# --- разрешение URL и токена: явный env поверх настроек плагина и конфиг-файла ---
 env_url="${DETOUR_URL:-}"
 env_token="${DETOUR_TOKEN:-}"
 env_token_cmd="${DETOUR_TOKEN_CMD:-}"
+plugin_url="${CLAUDE_PLUGIN_OPTION_URL:-}"
+plugin_token="${CLAUDE_PLUGIN_OPTION_TOKEN:-}"
 config_file="${DETOUR_CONFIG:-${XDG_CONFIG_HOME:-$HOME/.config}/detour/env}"
 if [ -f "$config_file" ]; then
   # shellcheck disable=SC1090
   . "$config_file"
 fi
-DETOUR_URL="${env_url:-${DETOUR_URL:-http://127.0.0.1:48100}}"
+DETOUR_URL="${env_url:-${plugin_url:-${DETOUR_URL:-http://127.0.0.1:48100}}}"
 DETOUR_URL="${DETOUR_URL%/}" # хвостовой слэш дал бы //v1/… и редирект от mux
-DETOUR_TOKEN="${env_token:-${DETOUR_TOKEN:-}}"
+DETOUR_TOKEN="${env_token:-${plugin_token:-${DETOUR_TOKEN:-}}}"
 DETOUR_TOKEN_CMD="${env_token_cmd:-${DETOUR_TOKEN_CMD:-}}"
 if [ -z "$DETOUR_TOKEN" ] && [ -n "$DETOUR_TOKEN_CMD" ]; then
   DETOUR_TOKEN="$(eval "$DETOUR_TOKEN_CMD")"
@@ -55,10 +60,11 @@ auth_args=()
 if [ -n "$DETOUR_TOKEN" ]; then
   auth_args=(-H "Authorization: Bearer $DETOUR_TOKEN")
 fi
+# ${auth_args[@]+…} — bash 3.2 (macOS) с set -u падает на пустом "${arr[@]}"
 
 req() { # method path [json-body]
   local method="$1" path="$2" body="${3:-}"
-  local args=(-sS --fail-with-body -X "$method" "${auth_args[@]}")
+  local args=(-sS --fail-with-body -X "$method" ${auth_args[@]+"${auth_args[@]}"})
   [ -n "$body" ] && args+=(-H 'Content-Type: application/json' -d "$body")
   curl "${args[@]}" "$DETOUR_URL$path"
   echo
@@ -71,7 +77,7 @@ json_field() { # <field> — печатает поле из JSON на stdin (п�
 wait_op() { # <op-id> — ждёт завершения, печатает операцию; exit 1 при failed
   local id="$1" op status
   for _ in $(seq 1 120); do
-    op="$(curl -sS --fail-with-body "${auth_args[@]}" "$DETOUR_URL/v1/operations/$id")"
+    op="$(curl -sS --fail-with-body ${auth_args[@]+"${auth_args[@]}"} "$DETOUR_URL/v1/operations/$id")"
     status="$(printf '%s' "$op" | json_field status)"
     if [ "$status" != "running" ]; then
       printf '%s\n' "$op"

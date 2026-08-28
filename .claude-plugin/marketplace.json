@@ -7,7 +7,16 @@
       "name": "detour",
       "source": "./.claude/skills/detour",
       "description": "Управление Detour через HTTP API агента: статус VPN, подключение и отключение, смена локации и протокола, настройки uplink, selfcheck, логи",
-      "version": "0.1.0"
+      "version": "0.2.0",
+      "relevance": {
+        "topic": "Detour (ExpressVPN sidecar-контейнер)",
+        "signals": {
+          "cwd": ["**/expressvpn*", "**/expressvpn*/**", "**/detour*"],
+          "manifestDeps": [
+            { "file": "docker-compose\\.ya?ml$", "pattern": "expressvpn" }
+          ]
+        }
+      }
     }
   ]
 }
