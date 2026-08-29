@@ -5,9 +5,9 @@
   "plugins": [
     {
       "name": "detour",
-      "source": "./.claude/skills/detour",
+      "source": "./agents-plugin",
       "description": "Управление Detour через HTTP API агента: статус VPN, подключение и отключение, смена локации и протокола, настройки uplink, selfcheck, логи",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "relevance": {
         "topic": "Detour (ExpressVPN sidecar-контейнер)",
         "signals": {

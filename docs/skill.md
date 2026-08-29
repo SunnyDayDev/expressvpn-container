@@ -1,15 +1,21 @@
-# Навык Detour для Claude Code
+# Навык Detour для агентов (Claude Code, ChatGPT/Codex)
 
-Навык [.claude/skills/detour](../.claude/skills/detour/SKILL.md) учит агента
-управлять Detour через [API агента](api.md): статус, подключение, смена локации
-и протокола, selfcheck, логи. В комплекте — скрипт
-[detour.sh](../.claude/skills/detour/scripts/detour.sh), которым агент (и вы)
-можете пользоваться из терминала.
+Навык [agents-plugin/skills/detour](../agents-plugin/skills/detour/SKILL.md)
+учит агента управлять Detour через [API агента](api.md): статус, подключение,
+смена локации и протокола, selfcheck, логи. В комплекте — скрипт
+[detour.sh](../agents-plugin/skills/detour/scripts/detour.sh), которым агент
+(и вы) можете пользоваться из терминала.
 
-## Подключение
+Каталог [agents-plugin](../agents-plugin/) — один плагин для двух экосистем:
+манифест Claude Code — в `agents-plugin/.claude-plugin/plugin.json`, манифест
+ChatGPT/Codex — в `agents-plugin/.codex-plugin/plugin.json`, а навык у них
+общий.
 
-Внутри этого репозитория навык работает сразу — Claude Code подхватывает
-проектные навыки из `.claude/skills/`.
+## Подключение в Claude Code
+
+Внутри этого репозитория навык работает сразу — `.claude/skills/detour` — это
+symlink на `agents-plugin/skills/detour`, и Claude Code подхватывает его как
+проектный навык.
 
 Чтобы управлять Detour с любой машины и из любой директории, репозиторий
 опубликован как маркетплейс плагинов Claude Code (манифест —
@@ -80,8 +86,33 @@ claude plugin install detour@detour
 (обновляется вместе с ним):
 
 ```bash
-ln -s "$(pwd)/.claude/skills/detour" ~/.claude/skills/detour
+ln -s "$(pwd)/agents-plugin/skills/detour" ~/.claude/skills/detour
 ```
+
+## Подключение в ChatGPT/Codex
+
+Репозиторий объявляет и marketplace плагинов Codex
+([.agents/plugins/marketplace.json](../.agents/plugins/marketplace.json)) с
+локальным источником `./agents-plugin`. На машине с клоном репозитория:
+
+```bash
+codex plugin marketplace add /абсолютный/путь/к/клону/expressvpn-container
+```
+
+Проверка: `codex plugin marketplace list` должен показать marketplace `detour`.
+Затем перезапустите ChatGPT desktop, откройте Plugins Directory, выберите
+marketplace **Detour** и установите плагин **detour**. В локальной задаче Codex
+навык вызывается как `$detour`; в обычном ChatGPT он выбирается как `@detour`,
+но запуск shell-скрипта и доступ к домашней сети требуют локальной среды Codex.
+
+После изменений навыка в репозитории выполните
+`codex plugin marketplace upgrade`, при необходимости переустановите плагин и
+перезапустите приложение. Не редактируйте файлы в `~/.codex/plugins/cache` —
+это сгенерированная установленная копия.
+
+`userConfig` — механизм Claude Code: Codex не передаёт настройки плагина в
+окружение, поэтому для ChatGPT/Codex задайте адрес и токен способами из
+следующего раздела (проще всего — файл `~/.config/detour/env`).
 
 ## Настройка адреса и токена
 
@@ -109,7 +140,7 @@ chmod 600 ~/.config/detour/env
 Проверка — из клона репозитория:
 
 ```bash
-.claude/skills/detour/scripts/detour.sh state
+agents-plugin/skills/detour/scripts/detour.sh state
 ```
 
 или просто попросите Claude: «проверь статус Detour» — навык вызовет тот же
@@ -143,7 +174,7 @@ chmod 600 ~/.config/detour/env
 
 ```bash
 DETOUR_URL=https://expressvpn.home DETOUR_TOKEN=dtr_… \
-  .claude/skills/detour/scripts/detour.sh state
+  agents-plugin/skills/detour/scripts/detour.sh state
 ```
 
 или отдельного файла: `DETOUR_CONFIG=~/.config/detour/nas.env detour.sh state`.

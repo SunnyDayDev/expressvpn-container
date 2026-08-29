@@ -7,40 +7,46 @@ description: Управление Detour (ExpressVPN sidecar-контейнер)
 
 Detour — контейнер с ExpressVPN, который выставляет VPN как SOCKS5-прокси и
 управляется HTTP/JSON API (`/v1`). Полный справочник эндпоинтов — в
-[docs/api.md](../../../docs/api.md) репозитория detour (если работаешь вне
-репозитория — попроси показать или используй таблицу ниже, её достаточно для
-типовых задач).
+[references/api.md](references/api.md) рядом с этим файлом; таблицы ниже
+достаточно для типовых задач.
 
 ## Как обращаться к API
 
 Используй скрипт [scripts/detour.sh](scripts/detour.sh) — он сам разрешает адрес
 и токен (переменные `DETOUR_URL`/`DETOUR_TOKEN`/`DETOUR_TOKEN_CMD`, настройки
 плагина `CLAUDE_PLUGIN_OPTION_URL`/`CLAUDE_PLUGIN_OPTION_TOKEN` или файл
-`~/.config/detour/env`) и умеет ждать завершения асинхронных операций:
+`~/.config/detour/env`) и умеет ждать завершения асинхронных операций.
+
+Путь к скрипту разрешай относительно каталога, из которого фактически загружен
+этот `SKILL.md` (ниже он обозначен `<skill-dir>`), — не предполагай, что текущий
+рабочий каталог совпадает с каталогом навыка:
 
 ```bash
-scripts/detour.sh state                                   # снимок состояния
-scripts/detour.sh action connect '{"location":"de-frankfurt-1"}'
-scripts/detour.sh patch '{"expressvpn":{"protocol":"lightway_tcp"}}'
-scripts/detour.sh selfcheck                               # проверка туннеля
-scripts/detour.sh logs uplink 100
+<skill-dir>/scripts/detour.sh state                       # снимок состояния
+<skill-dir>/scripts/detour.sh action connect '{"location":"de-frankfurt-1"}'
+<skill-dir>/scripts/detour.sh patch '{"expressvpn":{"protocol":"lightway_tcp"}}'
+<skill-dir>/scripts/detour.sh selfcheck                   # проверка туннеля
+<skill-dir>/scripts/detour.sh logs uplink 100
 ```
 
 Если скрипт недоступен — обычный curl с заголовком
 `Authorization: Bearer $DETOUR_TOKEN` на `$DETOUR_URL` (по умолчанию
 `http://127.0.0.1:48100`).
 
-Если навык установлен как плагин, адрес и токен задаются при включении плагина;
-настроенный адрес подставлен сюда: `${user_config.url}` (литеральный `${…}`
-означает, что навык загружен как проектный — бери значения из источников выше).
+Если навык установлен как плагин Claude Code, адрес и токен задаются при
+включении плагина; настроенный адрес подставлен сюда: `${user_config.url}`
+(литеральный `${…}` означает, что навык загружен не как плагин Claude Code —
+например, как проектный навык или в ChatGPT/Codex — бери значения из
+источников выше).
 Токен в текст навыка не подставляется намеренно: скрипт читает его из окружения,
 в контекст и вывод токен попадать не должен.
 
 Если и URL, и токен не настроены (`state` возвращает ошибку соединения или
 `401 unauthorized`) — не подбирай значения: скажи пользователю настроить
-подключение — при установке плагином задать адрес и токен в `/plugin` → detour,
-иначе по инструкции docs/skill.md (файл `~/.config/detour/env` с `DETOUR_URL` и
-`DETOUR_TOKEN`; токен виден в UI → Settings → Access).
+подключение — при установке плагином Claude Code задать адрес и токен в
+`/plugin` → detour, иначе по инструкции `docs/skill.md` репозитория Detour
+(файл `~/.config/detour/env` с `DETOUR_URL` и `DETOUR_TOKEN`; токен виден в
+UI → Settings → Access).
 
 ## Типовые задачи
 

@@ -1,12 +1,13 @@
 {
   "name": "detour",
   "description": "Управление Detour (ExpressVPN sidecar-контейнер) через HTTP API агента",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": { "name": "SunnyDayDev", "url": "https://github.com/SunnyDayDev" },
   "homepage": "https://github.com/SunnyDayDev/expressvpn-container/blob/main/docs/skill.md",
   "repository": "https://github.com/SunnyDayDev/expressvpn-container",
   "license": "MIT",
   "keywords": ["vpn", "expressvpn", "proxy", "socks5", "docker", "detour"],
+  "skills": "./skills/",
   "userConfig": {
     "url": {
       "type": "string",

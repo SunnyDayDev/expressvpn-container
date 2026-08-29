@@ -87,17 +87,19 @@ TOKEN=$(docker exec detour-expressvpn cat /data/auth/token)
 curl -sS -H "Authorization: Bearer $TOKEN" http://127.0.0.1:48100/v1/state | jq
 ```
 
-В репозитории публикуется навык для Claude Code —
-[.claude/skills/detour](.claude/skills/detour/SKILL.md): агент сможет по просьбе
-переключать локации, проверять туннель и читать логи. Репозиторий одновременно
-является маркетплейсом плагинов, так что установка — две команды:
+В репозитории публикуется навык для агентов —
+[agents-plugin/skills/detour](agents-plugin/skills/detour/SKILL.md): агент
+сможет по просьбе переключать локации, проверять туннель и читать логи.
+Репозиторий одновременно является маркетплейсом плагинов Claude Code, так что
+установка — две команды:
 
 ```
 /plugin marketplace add SunnyDayDev/expressvpn-container
 /plugin install detour@detour
 ```
 
-Настройка (куда положить адрес и токен) — [docs/skill.md](docs/skill.md).
+Тот же навык ставится плагином в ChatGPT/Codex — как, а также куда положить
+адрес и токен, описано в [docs/skill.md](docs/skill.md).
 
 ## Развёртывание на NAS (Linux)
 
@@ -261,5 +263,6 @@ docker compose exec detour detour-agent reset-password
 - `docker-compose.yml` + `.env.example` — единственный способ развёртывания
 - `design/` — макеты интерфейса (Pencil) и их описание
 - `docs/` — справочник API, спайки и runbook (сборка, проверка утечек, эксплуатация)
-- `.claude/skills/detour/` — навык Claude Code для управления через API
+- `agents-plugin/` — плагин с навыком Detour для Claude Code и ChatGPT/Codex
+  (`.claude/skills/detour` — symlink на его навык)
 - `openspec/` — спецификации и задачи (OpenSpec)
