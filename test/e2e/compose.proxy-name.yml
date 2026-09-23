@@ -1,0 +1,6 @@
+# Изолированный стенд для test/e2e/proxy-name.sh: накладывается поверх
+# docker-compose.yml и compose.e2e.yml в отдельном compose-проекте, чтобы не
+# задеть рабочий Detour (порты — через HTTP_PORT/SOCKS_PORT, том — проектный).
+services:
+  detour:
+    container_name: detour-e2e-proxy-name

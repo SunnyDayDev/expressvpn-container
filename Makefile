@@ -1,4 +1,4 @@
-.PHONY: up build agent-test web-dev e2e
+.PHONY: up build agent-test web-dev e2e e2e-proxy-name
 
 ## up: собрать и запустить контейнер (docker compose)
 up:
@@ -26,3 +26,8 @@ e2e:
 	$(E2E_COMPOSE) up -d --no-build
 	E2E_COMPOSE="$(E2E_COMPOSE)" test/e2e/uplink-switch.sh $(or $(SCENARIO),all); \
 		status=$$?; $(E2E_COMPOSE) rm -sf socks-a socks-b >/dev/null 2>&1; exit $$status
+
+## e2e-proxy-name: смена socks5-прокси «IP → имя compose-сервиса» на отдельном стенде
+## из текущего кода; вход в ExpressVPN не нужен, рабочий Detour не затрагивается.
+e2e-proxy-name:
+	test/e2e/proxy-name.sh
