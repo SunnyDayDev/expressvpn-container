@@ -63,7 +63,7 @@ EARLY_MAX=${EARLY_MAX:-2}
 CONNECT_MAX=${CONNECT_MAX:-180}
 LOC_ALT=${E2E_LOCATION_ALT:-netherlands-amsterdam}
 # Uplink'и задаются IP-адресами, как в боевой конфигурации: имя прокси агент
-# резолвит сам, и это отдельный путь, который здесь не проверяется.
+# резолвит сам, и это отдельный путь — его проверяет test/e2e/proxy-name.sh.
 SOCKS_A=${E2E_SOCKS_A:-}
 SOCKS_B=${E2E_SOCKS_B:-}
 PROBE_URL=https://api.ipify.org
