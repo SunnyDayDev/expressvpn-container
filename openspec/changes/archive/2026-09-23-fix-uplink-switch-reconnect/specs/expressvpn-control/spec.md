@@ -1,30 +1,4 @@
-## Purpose
-
-Управление демоном ExpressVPN внутри контейнера: вход, подключение, локации, протоколы, защита, автоподключение и надзор за соединением — всё через живой демон, без перезапуска контейнера.
-
-## Requirements
-
-### Requirement: Daemon bootstrap
-При старте контейнера агент SHALL запустить демон ExpressVPN, включить фоновый режим, выключить Network Lock ExpressVPN (его роль выполняет kill switch агента), выключить split tunneling и дождаться готовности демона. Если демон не готов в течение 60 секунд, `state.expressvpn.connection = error` с кодом `daemon_not_ready`.
-
-#### Scenario: Normal start
-- **WHEN** контейнер запущен
-- **THEN** в течение 60 секунд `expressvpnctl status` отвечает, `state.expressvpn.auth` отражает сохранённую сессию, Network Lock ExpressVPN выключен
-
-#### Scenario: Daemon crash
-- **WHEN** процесс демона завершается во время работы
-- **THEN** агент перезапускает его, переводит `connection` в `reconnecting` и, если `desired=connected`, переподключает VPN
-
-### Requirement: Login and logout
-Вход SHALL выполняться по коду активации, переданному через API. Код SHALL записываться во временный файл с правами `0600` только на время вызова и удаляться сразу после. Выход SHALL отключать VPN и удалять сессию.
-
-#### Scenario: Already logged in
-- **WHEN** вызван `login`, а демон уже в аккаунте
-- **THEN** операция завершается `succeeded` без повторной активации
-
-#### Scenario: Logout while connected
-- **WHEN** вызван `logout` при подключённом VPN
-- **THEN** VPN отключается, `auth = logged_out`, `desired = disconnected`
+## MODIFIED Requirements
 
 ### Requirement: Connect to a location
 `connect` SHALL подключать к указанной локации или к `smart`, если локация не задана; пока идёт подключение, `connection = connecting`. Если за 45 секунд подключение не установлено, агент SHALL повторить до 3 раз с экспоненциальной задержкой, затем `connection = error` с кодом `connect_failed`. Смена `expressvpn.location` при подключённом VPN SHALL приводить к переподключению к новой локации через новую сессию демона (см. «Supervision and reconnect»).
@@ -64,20 +38,6 @@
 - **WHEN** VPN подключён по `lightway_tcp`, uplink поддерживает UDP, клиент меняет `expressvpn.protocol` на `lightway_udp`
 - **THEN** `connection` проходит `reconnecting → connected`, и демон сообщает, что используется Lightway UDP
 
-### Requirement: Protection toggles applied live
-Переключатели `protections.ads|trackers|malicious|adult` SHALL применяться к демону немедленно, без переподключения, и отражаться в `GET /v1/config`.
-
-#### Scenario: Enable ad blocking
-- **WHEN** клиент ставит `protections.ads=true`
-- **THEN** демон получает соответствующую настройку, `GET /v1/config` возвращает `ads=true`
-
-### Requirement: Autoconnect
-Если `expressvpn.autoconnect=true`, агент SHALL подключать VPN к последней локации при старте контейнера и после восстановления uplink'а; если `false` — ждать явного `connect`.
-
-#### Scenario: Container restart with autoconnect
-- **WHEN** контейнер перезапущен, `autoconnect=true`, аккаунт активен
-- **THEN** VPN подключается без участия пользователя, `desired=connected`
-
 ### Requirement: Supervision and reconnect
 Пока `desired=connected`, агент SHALL отслеживать состояние демона не реже раза в 5 секунд; при неожиданном разрыве SHALL переподключать с экспоненциальной задержкой (1, 2, 4 … до 60 секунд). После 10 подряд неудач `connection=error` с кодом `reconnect_exhausted`; следующая попытка — по действию пользователя или восстановлению uplink'а.
 
@@ -104,10 +64,3 @@
 #### Scenario: Reconnect is logged
 - **WHEN** агент переподключает VPN по любой причине
 - **THEN** в `GET /v1/logs?component=agent` есть запись `info` о начале переподключения с причиной, а после успеха — запись о подключении с локацией и протоколом
-
-### Requirement: Locations cache
-Агент SHALL получать список локаций у демона после входа, кешировать его и обновлять не реже раза в 24 часа и по действию `refresh-locations`.
-
-#### Scenario: Stale cache
-- **WHEN** кеш старше 24 часов
-- **THEN** агент обновляет его в фоне, не мешая текущему подключению

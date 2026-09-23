@@ -1,0 +1,15 @@
+# Override для сквозного теста (make e2e): два SOCKS5-uplink'а рядом с Detour.
+# sing-box берётся из того же образа — ничего не качаем. Пути — относительно
+# корня репозитория (каталога базового docker-compose.yml).
+x-socks: &socks
+  image: detour/expressvpn-sidecar:${EXPRESSVPN_VERSION:-14.2.0.13656}-${AGENT_VERSION:-0.1.0}
+  entrypoint: ["sing-box", "run", "-c", "/etc/e2e/socks.json"]
+  volumes:
+    - ./test/e2e/socks.json:/etc/e2e/socks.json:ro
+  healthcheck:
+    disable: true
+  restart: "no"
+
+services:
+  socks-a: *socks
+  socks-b: *socks

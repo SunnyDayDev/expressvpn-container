@@ -33,6 +33,9 @@ type UplinkDriver interface {
 	// Apply идемпотентно приводит uplink к конфигурации и возвращает его
 	// состояние (status, udpSupported).
 	Apply(ctx context.Context, cfg config.Uplink) (state.Uplink, error)
+	// WaitUDP ждёт результата UDP-пробы последнего Apply (udp=auto) и
+	// возвращает udpSupported; по отмене ctx — unknown.
+	WaitUDP(ctx context.Context) state.TriState
 }
 
 // KillswitchDriver — nftables-правила (пакет killswitch).
@@ -67,10 +70,29 @@ type Reconciler struct {
 	retryMu         sync.Mutex
 	connectFailures int
 	nextRetryAt     time.Time
-	forceReconnect  bool
+	// forceReason — причина обязательного переподключения на следующем
+	// проходе (пусто — не нужно).
+	forceReason string
+
+	// udpWait — сколько ждать UDP-пробы перед выбором протокола.
+	udpWait time.Duration
 }
 
 const maxReconnectFailures = 10
+
+// udpWaitTimeout — проба: 3 с на датаграмму плюс TCP-рукопожатие с прокси.
+const udpWaitTimeout = 5 * time.Second
+
+// Причины (пере)подключения — для журнала (спека Supervision and reconnect).
+const (
+	reasonUplinkChanged   = "uplink_changed"
+	reasonUserRequest     = "user_request"
+	reasonLocationChanged = "location_changed"
+	reasonProtocolChanged = "protocol_changed"
+	reasonConnectionLost  = "connection_lost"
+	reasonRetry           = "retry"
+	reasonConnect         = "connect"
+)
 
 type connSpec struct {
 	Location string
@@ -80,8 +102,9 @@ type connSpec struct {
 func New(st *state.Store, cfg *config.Store, d Drivers, logger *slog.Logger) *Reconciler {
 	r := &Reconciler{
 		st: st, cfg: cfg, d: d,
-		logger: logger.With("component", "agent"),
-		wake:   make(chan struct{}, 1),
+		logger:  logger.With("component", "agent"),
+		wake:    make(chan struct{}, 1),
+		udpWait: udpWaitTimeout,
 	}
 	cfg.OnChange(func(config.Config) { r.Wake() })
 	return r
@@ -96,10 +119,11 @@ func (r *Reconciler) Wake() {
 }
 
 // forgetConnection помечает, что следующий проход цикла должен выполнить
-// переподключение, даже если конфигурация не менялась (действие reconnect).
-func (r *Reconciler) forgetConnection() {
+// переподключение, даже если конфигурация не менялась (смена uplink'а,
+// действие reconnect).
+func (r *Reconciler) forgetConnection(reason string) {
 	r.retryMu.Lock()
-	r.forceReconnect = true
+	r.forceReason = reason
 	r.retryMu.Unlock()
 }
 
@@ -157,13 +181,14 @@ func (r *Reconciler) reconcile(ctx context.Context) {
 			st.Uplink.Mode = c.Uplink.Mode
 			st.Uplink.Status = state.UplinkUnknown
 			st.Uplink.Reason = "applying"
+			st.Uplink.UDPSupported = state.TriUnknown // до пробы нового uplink'а
 			if st.Desired.Connection == state.DesiredConnected &&
 				st.ExpressVPN.Connection == state.ConnConnected {
 				st.ExpressVPN.Connection = state.ConnReconnecting
 			}
 		})
 		if s.Desired.Connection == state.DesiredConnected && r.appliedUplink != nil {
-			r.forgetConnection()
+			r.forgetConnection(reasonUplinkChanged)
 		}
 		us, err := r.d.Uplink.Apply(ctx, c.Uplink)
 		if err != nil {
@@ -175,7 +200,15 @@ func (r *Reconciler) reconcile(ctx context.Context) {
 		}
 		ul := c.Uplink
 		r.appliedUplink = &ul
-		r.st.Update(func(st *state.State) { st.Uplink = us })
+		r.st.Update(func(st *state.State) {
+			// Проба могла успеть раньше этой публикации — не затираем её
+			// результат: Apply отдаёт unknown, пока проба идёт.
+			udp := st.Uplink.UDPSupported
+			st.Uplink = us
+			if us.UDPSupported == state.TriUnknown {
+				st.Uplink.UDPSupported = udp
+			}
+		})
 	}
 
 	// 3. Настройки ExpressVPN (защита, автоподключение) — на лету.
@@ -194,11 +227,12 @@ func (r *Reconciler) reconcile(ctx context.Context) {
 	switch s.Desired.Connection {
 	case state.DesiredConnected:
 		r.retryMu.Lock()
-		force := r.forceReconnect
-		r.forceReconnect = false
+		forceReason := r.forceReason
+		r.forceReason = ""
 		exhausted := r.connectFailures >= maxReconnectFailures
 		retryDue := time.Now().After(r.nextRetryAt)
 		r.retryMu.Unlock()
+		force := forceReason != ""
 
 		needsConnect := force ||
 			s.ExpressVPN.Connection == state.ConnDisconnected ||
@@ -214,19 +248,42 @@ func (r *Reconciler) reconcile(ctx context.Context) {
 			return
 		}
 
+		why := connectReason(forceReason, s.ExpressVPN.Connection, r.appliedConn, want)
 		requested := want.Protocol
 		if requested == "" {
 			requested = "auto"
 		}
-		effective, reason := xvpn.EffectiveProtocol(requested, c.Uplink.Mode, s.Uplink.UDPSupported)
+		// State — до драйвера: его собственный disconnect не должен выглядеть
+		// для Supervise неожиданным разрывом.
 		r.st.Update(func(st *state.State) {
 			if st.ExpressVPN.Connection == state.ConnConnected {
 				st.ExpressVPN.Connection = state.ConnReconnecting
 			} else if st.ExpressVPN.Connection != state.ConnReconnecting {
 				st.ExpressVPN.Connection = state.ConnConnecting
 			}
+		})
+		// Сразу после смены uplink'а UDP-проба ещё идёт: протокол выбираем по
+		// её результату (D7: проба до подключения), а не по unknown.
+		udp := r.st.Get().Uplink.UDPSupported
+		if c.Uplink.Mode == "socks5" && c.Uplink.Socks5.UDP == "auto" && udp == state.TriUnknown {
+			wctx, cancel := context.WithTimeout(ctx, r.udpWait)
+			if v := r.d.Uplink.WaitUDP(wctx); v != state.TriUnknown {
+				udp = v
+				r.st.Update(func(st *state.State) { st.Uplink.UDPSupported = v })
+			}
+			cancel()
+		}
+		effective, reason := xvpn.EffectiveProtocol(requested, c.Uplink.Mode, udp)
+		r.st.Update(func(st *state.State) {
 			st.ExpressVPN.Protocol = state.Protocol{Requested: requested, Effective: effective, Reason: reason}
 		})
+		msg := "reconnecting expressvpn"
+		if s.ExpressVPN.Connection == state.ConnDisconnected {
+			msg = "connecting expressvpn"
+		}
+		r.logger.Info(msg, "reason", why, "from", string(s.ExpressVPN.Connection),
+			"location", locationOrSmart(want.Location), "protocol", effective)
+		start := time.Now()
 		if err := r.d.XVPN.Connect(ctx, want.Location, effective); err != nil {
 			r.onConnectFailure(err)
 			return
@@ -243,6 +300,8 @@ func (r *Reconciler) reconcile(ctx context.Context) {
 			}
 			st.LastError = nil
 		})
+		r.logger.Info("expressvpn connected", "location", locationOrSmart(r.st.Get().ExpressVPN.Location),
+			"protocol", effective, "took", time.Since(start).Round(100*time.Millisecond).String())
 	case state.DesiredDisconnected:
 		if s.ExpressVPN.Connection == state.ConnConnected ||
 			s.ExpressVPN.Connection == state.ConnConnecting ||
@@ -255,6 +314,32 @@ func (r *Reconciler) reconcile(ctx context.Context) {
 			r.st.Update(func(st *state.State) { st.ExpressVPN.Connection = state.ConnDisconnected })
 		}
 	}
+}
+
+// connectReason — причина (пере)подключения для журнала: явная (смена
+// uplink'а, действие пользователя) или выведенная из состояния.
+func connectReason(force string, conn state.Connection, applied *connSpec, want connSpec) string {
+	switch {
+	case force != "":
+		return force
+	case conn == state.ConnConnected && applied != nil && applied.Location != want.Location:
+		return reasonLocationChanged
+	case conn == state.ConnConnected:
+		return reasonProtocolChanged
+	case conn == state.ConnReconnecting:
+		return reasonConnectionLost
+	case conn == state.ConnError:
+		return reasonRetry
+	default:
+		return reasonConnect
+	}
+}
+
+func locationOrSmart(loc string) string {
+	if loc == "" {
+		return "smart"
+	}
+	return loc
 }
 
 // onConnectFailure: каждая неудача (драйвер уже сделал свои 45 с × 3)
