@@ -16,6 +16,7 @@ import (
 	"detour/agent/internal/config"
 	"detour/agent/internal/killswitch"
 	"detour/agent/internal/logs"
+	"detour/agent/internal/netx"
 	"detour/agent/internal/proxy"
 	"detour/agent/internal/reconciler"
 	"detour/agent/internal/selfcheck"
@@ -76,6 +77,11 @@ func run(logger *slog.Logger, logBuf *logs.Buffer) error {
 	if err := checkPrereqs(); err != nil {
 		return err
 	}
+
+	// Резолвер контейнера пинуется до старта слоёв: uplink в socks5-режиме
+	// переписывает /etc/resolv.conf на перехват sing-box, а имя прокси агент
+	// обязан резолвить через Docker (D5, контур 3).
+	logger.Info("container resolver pinned", "nameserver", netx.PinContainerDNS(uplink.TunPeer))
 
 	dataDir := envOr("DETOUR_DATA_DIR", "/data")
 	if err := ensureDataDir(dataDir); err != nil {

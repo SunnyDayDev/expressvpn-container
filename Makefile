@@ -1,4 +1,4 @@
-.PHONY: up build agent-test web-dev
+.PHONY: up build agent-test uplink-test web-dev
 
 ## up: собрать и запустить контейнер (docker compose)
 up:
@@ -11,6 +11,10 @@ build:
 ## agent-test: юнит-тесты агента внутри golang-контейнера (Go на хосте не нужен)
 agent-test:
 	docker run --rm -v $(CURDIR)/image/agent:/src -w /src golang:1.25 go test ./...
+
+## uplink-test: e2e смены socks5-прокси на лету (отдельный стенд, логин ExpressVPN не нужен)
+uplink-test:
+	image/tests/uplink-switch.sh
 
 ## web-dev: dev-сервер фронтенда внутри node-контейнера (Node на хосте не нужен)
 web-dev:
