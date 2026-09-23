@@ -222,6 +222,10 @@ func TestEventsSnapshotAndUpdateWithinSecond(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		if got := resp.Header.Get("X-Accel-Buffering"); got != "no" {
+			resp.Body.Close()
+			t.Fatalf("X-Accel-Buffering=%q, want no", got)
+		}
 		ch := make(chan string, 8)
 		go readSSE(t, resp, ch)
 		return ch, func() { resp.Body.Close() }
