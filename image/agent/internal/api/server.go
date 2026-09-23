@@ -227,6 +227,9 @@ func (s *Server) handleEvents(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Cache-Control", "no-store")
+	// nginx с настройками по умолчанию (proxy_buffering on) копит ответ в буфере
+	// и задерживает SSE-события; заголовок отключает буферизацию для этого ответа
+	w.Header().Set("X-Accel-Buffering", "no")
 	w.WriteHeader(http.StatusOK)
 
 	ch, cancel := s.deps.State.Subscribe()
@@ -406,6 +409,9 @@ func (s *Server) handleLogsStream(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Cache-Control", "no-store")
+	// nginx с настройками по умолчанию (proxy_buffering on) копит ответ в буфере
+	// и задерживает SSE-события; заголовок отключает буферизацию для этого ответа
+	w.Header().Set("X-Accel-Buffering", "no")
 	w.WriteHeader(http.StatusOK)
 
 	ch, cancel := s.deps.Logs.Subscribe()
