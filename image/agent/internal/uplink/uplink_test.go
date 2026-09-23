@@ -3,10 +3,13 @@ package uplink
 import (
 	"context"
 	"encoding/json"
+	"log/slog"
 	"strings"
 	"testing"
+	"time"
 
 	"detour/agent/internal/config"
+	"detour/agent/internal/state"
 )
 
 func TestSingboxConfig(t *testing.T) {
@@ -130,5 +133,111 @@ func TestDNSQueryEncoding(t *testing.T) {
 	}
 	if q[12] != 7 || string(q[13:20]) != "example" || q[20] != 3 || string(q[21:24]) != "com" {
 		t.Fatalf("labels wrong: %v", q[12:])
+	}
+}
+
+// newProbeManager — Manager без Apply (маршруты, sing-box): проба запускается
+// напрямую, функция пробы подменена.
+func newProbeManager(t *testing.T, probe func(context.Context, string, config.Socks5, *slog.Logger) bool) (*Manager, *state.Store) {
+	t.Helper()
+	st := state.NewStore(state.Initial("test"))
+	st.Update(func(s *state.State) { s.Uplink.Mode = "socks5" })
+	m := NewManager(slog.New(slog.DiscardHandler), st)
+	m.probe = probe
+	return m, st
+}
+
+func startProbe(m *Manager, cfg config.Uplink, ip string) {
+	m.mu.Lock()
+	m.applied = &cfg
+	m.startProbeLocked(cfg, ip)
+	m.mu.Unlock()
+}
+
+var autoUplink = config.Uplink{Mode: "socks5", Socks5: config.Socks5{Host: "192.0.2.1", Port: 1080, UDP: "auto"}}
+
+func TestWaitUDPWaitsForProbe(t *testing.T) {
+	m, st := newProbeManager(t, func(context.Context, string, config.Socks5, *slog.Logger) bool {
+		time.Sleep(50 * time.Millisecond)
+		return true
+	})
+	startProbe(m, autoUplink, "192.0.2.1")
+	if got := st.Get().Uplink.UDPSupported; got != state.TriUnknown {
+		t.Fatalf("udpSupported=%s right after start, want unknown", got)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	if got := m.WaitUDP(ctx); got != state.TriTrue {
+		t.Fatalf("WaitUDP=%s want true", got)
+	}
+	if got := st.Get().Uplink.UDPSupported; got != state.TriTrue {
+		t.Fatalf("state udpSupported=%s want true", got)
+	}
+}
+
+func TestWaitUDPImmediateWithoutProbe(t *testing.T) {
+	m, _ := newProbeManager(t, nil)
+	canceled, cancel := context.WithCancel(context.Background())
+	cancel() // ответ не должен зависеть от ожидания
+	for _, c := range []struct {
+		cfg  config.Uplink
+		want state.TriState
+	}{
+		{config.Uplink{Mode: "host"}, state.TriTrue},
+		{config.Uplink{Mode: "socks5", Socks5: config.Socks5{UDP: "on"}}, state.TriTrue},
+		{config.Uplink{Mode: "socks5", Socks5: config.Socks5{UDP: "off"}}, state.TriFalse},
+	} {
+		cfg := c.cfg
+		m.mu.Lock()
+		m.applied, m.probeRun = &cfg, nil
+		m.mu.Unlock()
+		if got := m.WaitUDP(canceled); got != c.want {
+			t.Fatalf("%+v: WaitUDP=%s want %s", c.cfg, got, c.want)
+		}
+	}
+}
+
+func TestWaitUDPTimeoutIsUnknown(t *testing.T) {
+	release := make(chan struct{})
+	defer close(release)
+	m, _ := newProbeManager(t, func(context.Context, string, config.Socks5, *slog.Logger) bool {
+		<-release
+		return true
+	})
+	startProbe(m, autoUplink, "192.0.2.1")
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Millisecond)
+	defer cancel()
+	if got := m.WaitUDP(ctx); got != state.TriUnknown {
+		t.Fatalf("WaitUDP=%s want unknown on timeout", got)
+	}
+}
+
+// Проба прежнего uplink'а, закончившаяся позже, не должна записать свой
+// результат поверх нового.
+func TestStaleProbeDoesNotPublish(t *testing.T) {
+	releaseOld := make(chan struct{})
+	m, st := newProbeManager(t, func(_ context.Context, ip string, _ config.Socks5, _ *slog.Logger) bool {
+		if ip == "192.0.2.1" { // прежний uplink: отвечает поздно и «с UDP»
+			<-releaseOld
+			return true
+		}
+		return false
+	})
+	startProbe(m, autoUplink, "192.0.2.1")
+	m.mu.Lock()
+	oldRun := m.probeRun
+	m.mu.Unlock()
+
+	startProbe(m, autoUplink, "192.0.2.2") // повторный Apply: новая проба
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	if got := m.WaitUDP(ctx); got != state.TriFalse {
+		t.Fatalf("WaitUDP=%s want false (new probe)", got)
+	}
+
+	close(releaseOld)
+	<-oldRun.done
+	if got := st.Get().Uplink.UDPSupported; got != state.TriFalse {
+		t.Fatalf("udpSupported=%s: stale probe overwrote the new result", got)
 	}
 }

@@ -51,3 +51,27 @@ DisconnectingToReconnect, Disconnecting` (из help).
   активном аккаунте не выполняется (агент проверяет статус заранее).
 - `get pubip` обновляется лениво — сразу после connect может отдавать старый
   IP; источником истины для «публичного IP» служит self-check.
+
+## Семантика команд при активной сессии (2026-09-23, 14.2.0.13656)
+
+Снято на локальном стенде: Detour + два socks5-uplink'а (sing-box), протокол
+`lightway_tcp`, локация `singapore-marina-bay`; переходы — по
+`expressvpnctl monitor connectionstate`.
+
+| Команда | Состояние до | Результат |
+|---|---|---|
+| `connect <та же локация>` | `Connected` | `rc=0` за 0,12 с, переходов нет — **no-op** |
+| `set protocol <другой>` | `Connected` | `rc=0`, переподключения нет, `Protocol in use` не меняется — применится при следующем подключении |
+| `set protocol <другой>`, затем `connect <та же локация>` | `Connected` | демон сам: `DisconnectingToReconnect → Reconnecting → Connected` с новым протоколом (e2e s5 до исправления) |
+| `connect <другая локация>` | `Connected` | `rc=0` за 0,64 с; демон сам: `DisconnectingToReconnect → Reconnecting → …` |
+| `disconnect` | `Connected` | `rc=0` за 0,11 с, возвращается в `Disconnecting`; `Disconnected` — позже (<2 с) |
+| `disconnect` | `Reconnecting` | `rc=0` за 0,12 с; `Disconnecting → Disconnected`, без `daemon_not_ready` |
+| (sing-box перезапущен под сессией Lightway TCP) | `Connected` | обрыв замечен демоном через 61 с (на NAS — 79–108 с) |
+| (upstream-socks перезапущен, sing-box жив) | `Connected` | обрыв замечен за 0,4 с |
+
+Следствия для агента: `connect` и `disconnect` возвращаются до фактического
+перехода, а `connect` при «живой» сессии с теми же локацией и протоколом не
+делает ничего. Поэтому новая сессия
+всегда начинается с `disconnect` и ожидания ровно `Disconnected`
+(`Disconnecting` — ещё нет), а успех подключения засчитывается только по
+наблюдаемому `Connected` после этого (`Manager.Connect`).

@@ -105,6 +105,10 @@ cross‑site‑щит, `404` неизвестный ресурс, `409` конф
 
 - `expressvpn.auth`: `logged_in | logged_out`;
 - `expressvpn.connection`: `disconnected | connecting | connected | reconnecting | error`;
+  `connected` выставляется только после фактического подключения демона в новой
+  сессии (в том числе после смены uplink'а, локации или протокола);
+- `expressvpn.connectedAt` — момент установления текущей сессии; во время
+  переподключения поля нет;
 - `uplink.status`: `up | down | degraded | unknown`; `uplink.udpSupported`: `"true" | "false" | "unknown"`;
 - `selfcheck.verdict`: `ok | warning | fail` (поле `null`, пока selfcheck не выполнялся);
 - `desired.connection` — желаемое состояние (то, к чему стремится реконсайлер).
@@ -192,8 +196,8 @@ curl -sS -X PATCH -H "Authorization: Bearer $TOKEN" \
 | Действие | Тело | Что делает |
 |---|---|---|
 | `connect` | `{"location":"…"}` (опц.) | подключиться (к локации или текущей/smart) |
-| `disconnect` | — | отключиться |
-| `reconnect` | — | переподключиться |
+| `disconnect` | — | отключиться; `succeeded` — когда демон фактически в `Disconnected` |
+| `reconnect` | — | новая сессия демона (отключение, затем подключение), даже если демон считает текущую живой; `succeeded` — после фактического подключения |
 | `login` | `{"activationCode":"…"}` | вход в аккаунт ExpressVPN; код не попадает в логи |
 | `logout` | — | выход из аккаунта |
 | `refresh-locations` | — | обновить кеш списка локаций |

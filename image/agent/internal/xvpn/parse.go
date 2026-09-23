@@ -10,6 +10,10 @@ import (
 // (golden-данные: testdata/, собраны спайком S3).
 
 // ParseConnectionState отображает вывод `get connectionstate` в состояние API.
+// rawDisconnected — единственное сырое состояние, в котором демон точно
+// отключён (Disconnecting ParseConnectionState тоже сводит к disconnected).
+const rawDisconnected = "Disconnected"
+
 func ParseConnectionState(out string) state.Connection {
 	switch strings.TrimSpace(out) {
 	case "Disconnected", "Disconnecting":

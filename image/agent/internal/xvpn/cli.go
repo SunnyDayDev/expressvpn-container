@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"strings"
 	"time"
 
 	"detour/agent/internal/state"
@@ -64,11 +65,21 @@ func (c *CLI) run(ctx context.Context, action string, timeout time.Duration, arg
 }
 
 func (c *CLI) ConnectionState(ctx context.Context) (state.Connection, error) {
-	out, err := c.run(ctx, "get", ctlTimeout, "get", "connectionstate")
+	raw, err := c.RawConnectionState(ctx)
 	if err != nil {
 		return state.ConnDisconnected, err
 	}
-	return ParseConnectionState(out), nil
+	return ParseConnectionState(raw), nil
+}
+
+// RawConnectionState — состояние демона как есть: в отличие от
+// ConnectionState, различает Disconnecting и Disconnected.
+func (c *CLI) RawConnectionState(ctx context.Context) (string, error) {
+	out, err := c.run(ctx, "get", ctlTimeout, "get", "connectionstate")
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(out), nil
 }
 
 func (c *CLI) Status(ctx context.Context) (Status, error) {

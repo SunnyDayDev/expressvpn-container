@@ -41,11 +41,14 @@ type Manager struct {
 	// (reconciler.ResetRetries).
 	onRecovered func()
 	cfgPath     string
+	// probe — UDP-проба (ProbeUDP; подменяется в тестах).
+	probe func(ctx context.Context, proxyIP string, cfg config.Socks5, logger *slog.Logger) bool
 
 	mu          sync.Mutex
 	proc        *exec.Cmd
 	procDone    chan struct{}
 	applied     *config.Uplink
+	probeRun    *probeRun // проба, запущенная последним Apply (udp=auto)
 	proxyIP     string
 	gw          string
 	savedResolv []byte
@@ -58,7 +61,13 @@ func NewManager(logger *slog.Logger, st *state.Store) *Manager {
 		resolve: resolveIPv4,
 		st:      st,
 		cfgPath: filepath.Join(os.TempDir(), "detour-singbox.json"),
+		probe:   ProbeUDP,
 	}
+}
+
+// probeRun — одна UDP-проба; done закрывается после публикации результата.
+type probeRun struct {
+	done chan struct{}
 }
 
 // OnRecovered задаёт колбэк восстановления (вызывается из health-монитора).
@@ -75,6 +84,7 @@ func (m *Manager) Apply(ctx context.Context, cfg config.Uplink) (state.Uplink, e
 			m.teardownLocked(ctx)
 		}
 		m.applied = &cfg
+		m.probeRun = nil
 		return state.Uplink{Mode: "host", Status: state.UplinkUp, UDPSupported: state.TriTrue}, nil
 
 	case "socks5":
@@ -142,8 +152,9 @@ func (m *Manager) Apply(ctx context.Context, cfg config.Uplink) (state.Uplink, e
 			us.UDPSupported = state.TriFalse
 		default:
 			us.UDPSupported = state.TriUnknown
-			// Probe — асинхронно, чтобы не держать реконсайлер (задача 7.3).
-			go m.probeAndPublish(cfg)
+			// Probe — асинхронно, чтобы не держать реконсайлер (задача 7.3);
+			// кому нужен результат до подключения, ждёт его через WaitUDP.
+			m.startProbeLocked(cfg, ip)
 		}
 		return us, nil
 
@@ -254,6 +265,7 @@ func (m *Manager) teardownLocked(ctx context.Context) {
 	}
 	m.proxyIP = ""
 	m.applied = nil
+	m.probeRun = nil
 	m.logger.Info("socks5 uplink torn down")
 }
 
@@ -266,24 +278,63 @@ func (m *Manager) Shutdown(ctx context.Context) {
 	}
 }
 
-// probeAndPublish выполняет UDP-probe и публикует результат (udp=auto).
-func (m *Manager) probeAndPublish(cfg config.Uplink) {
+// startProbeLocked запускает UDP-пробу для только что применённого uplink'а.
+// Сброс udpSupported и публикация результата идут под m.mu, поэтому проба
+// прежнего uplink'а не может записать свой результат поверх нового.
+func (m *Manager) startProbeLocked(cfg config.Uplink, ip string) {
+	run := &probeRun{done: make(chan struct{})}
+	m.probeRun = run
+	m.st.Update(func(s *state.State) { s.Uplink.UDPSupported = state.TriUnknown })
+	go m.probeAndPublish(run, cfg, ip)
+}
+
+// probeAndPublish выполняет UDP-probe и публикует результат (udp=auto), если
+// за это время uplink не перестроили.
+func (m *Manager) probeAndPublish(run *probeRun, cfg config.Uplink, ip string) {
+	defer close(run.done)
 	ctx, cancel := context.WithTimeout(context.Background(), probeTimeout+2*time.Second)
 	defer cancel()
-	m.mu.Lock()
-	ip := m.proxyIP
-	m.mu.Unlock()
-	supported := ProbeUDP(ctx, ip, cfg.Socks5, m.logger)
+	supported := m.probe(ctx, ip, cfg.Socks5, m.logger)
 	v := state.TriFalse
 	if supported {
 		v = state.TriTrue
 	}
-	m.st.Update(func(s *state.State) {
-		if s.Uplink.Mode == "socks5" {
-			s.Uplink.UDPSupported = v
-		}
-	})
-	m.logger.Info("udp probe finished", "supported", supported)
+	m.mu.Lock()
+	current := m.probeRun == run
+	if current {
+		m.st.Update(func(s *state.State) {
+			if s.Uplink.Mode == "socks5" {
+				s.Uplink.UDPSupported = v
+			}
+		})
+	}
+	m.mu.Unlock()
+	m.logger.Info("udp probe finished", "supported", supported, "current", current)
+}
+
+// WaitUDP ждёт результата UDP-пробы, запущенной последним Apply, и возвращает
+// uplink.udpSupported; для host и udp=on|off — сразу. По отмене ctx — unknown:
+// сколько ждать, решает вызывающий (реконсайлер перед выбором протокола).
+func (m *Manager) WaitUDP(ctx context.Context) state.TriState {
+	m.mu.Lock()
+	cfg, run := m.applied, m.probeRun
+	m.mu.Unlock()
+	switch {
+	case cfg == nil:
+		return state.TriUnknown
+	case cfg.Mode == "host", cfg.Socks5.UDP == "on":
+		return state.TriTrue
+	case cfg.Socks5.UDP == "off":
+		return state.TriFalse
+	case run == nil:
+		return m.st.Get().Uplink.UDPSupported
+	}
+	select {
+	case <-run.done:
+		return m.st.Get().Uplink.UDPSupported
+	case <-ctx.Done():
+		return state.TriUnknown
+	}
 }
 
 // ProbeAction — действие probe-uplink: перезапускает probe вручную.

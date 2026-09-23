@@ -75,9 +75,11 @@ func (a *Actions) Reconnect(ctx context.Context) error {
 	if s.Desired.Connection != state.DesiredConnected {
 		return &xvpn.CLIError{Code: "not_connected", Message: "nothing to reconnect: desired state is disconnected"}
 	}
-	// Сбрасываем appliedConn — цикл выполнит связку disconnect→connect заново.
+	// Цикл выполнит Connect принудительно, а драйвер начинает новую сессию
+	// с disconnect (xvpn.Manager.Connect): иначе `connect` при «живой» по
+	// мнению демона сессии — no-op.
 	a.r.st.Update(func(st *state.State) { st.ExpressVPN.Connection = state.ConnReconnecting })
-	a.r.forgetConnection()
+	a.r.forgetConnection(reasonUserRequest)
 	a.r.ResetRetries()
 	return a.waitConnection(ctx, state.ConnConnected)
 }
